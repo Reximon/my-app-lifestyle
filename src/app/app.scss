@@ -1,0 +1,25 @@
+.app-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  min-height: 100vh;
+  gap: 16px;
+  padding: 16px;
+}
+
+.sidebar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sidebar-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
