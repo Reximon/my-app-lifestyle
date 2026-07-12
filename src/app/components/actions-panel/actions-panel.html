@@ -1,0 +1,16 @@
+<section class="actions-panel">
+  <select [(ngModel)]="selectedType">
+    <!--'tarea' | 'clase' | 'topic' | 'nota' | 'assignment'  -->
+    <option value="tarea">Tarea</option>
+    <option value="clase">Clase</option>
+    <option value="topic">topic</option>
+    <option value="nota">nota</option>
+    <option value="assignment">assignment</option>
+
+
+  </select>
+
+  <input [(ngModel)]="title" placeholder="Título">
+
+  <button (click)="create()">Crear</button>
+</section>
