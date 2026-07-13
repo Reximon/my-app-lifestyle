@@ -1,9 +1,19 @@
 <section class="todo-week">
   <h2>Tareas de la semana</h2>
-  @for (task of tasks; track task.id) {
+
+  <div class="filters">
+    <button [class.active]="filterStatus === 'todas'" (click)="filterStatus = 'todas'">Todas</button>
+    <button [class.active]="filterStatus === 'pendiente'" (click)="filterStatus = 'pendiente'">Pendientes</button>
+    <button [class.active]="filterStatus === 'completado'" (click)="filterStatus = 'completado'">Completadas</button>
+  </div>
+
+  @for (task of filteredTasks; track task.id) {
     <div class="task-item" [class.completed]="task.status === 'completado'">
-      <input type="checkbox" [checked]="task.status === 'completado'"
-             (change)="toggleTask(task)">
+      <label class="custom-checkbox">
+        <input type="checkbox" [checked]="task.status === 'completado'"
+               (change)="toggleTask(task)">
+        <span class="checkmark"></span>
+      </label>
       <span>{{ task.title }}</span>
     </div>
   }

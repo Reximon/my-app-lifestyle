@@ -1,4 +1,12 @@
-<div class="clock">
-  <span class="time">{{ time }}</span>
-  <span class="date">{{ date }}</span>
+<div class="clock-face">
+  @for (mark of hourMarks; track mark) {
+    <div class="hour-tick"
+         [style.transform]="'rotate(' + mark * 30 + 'deg)'">
+    </div>
+  }
+  <div class="hand hour" [style.transform]="'rotate(' + hoursDeg + 'deg)'"></div>
+  <div class="hand minute" [style.transform]="'rotate(' + minutesDeg + 'deg)'"></div>
+  <div class="hand second" [style.transform]="'rotate(' + secondsDeg + 'deg)'"></div>
+  <div class="digital-time">{{ digitalTime }}</div>
+  <div class="digital-date">{{ date }}</div>
 </div>

@@ -11,17 +11,26 @@ import { Task } from '../../models/task.model';
 export class TodoWeek implements OnInit {
 
   public tasks: Task[] = [];
+  public filterStatus: string = 'todas';
 
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.tasks = this.taskService.getTasks().filter(t => t.type === 'tarea');
+    this.taskService.tasks$.subscribe(tasks => {
+      this.tasks = tasks.filter(t => t.type === 'tarea');
+    });
+  }
+
+  public get filteredTasks(): Task[] {
+    if (this.filterStatus === 'completado') {
+      return this.tasks.filter(t => t.status === 'completado');
+    }
+    return this.tasks.filter(t => t.status === 'pendiente');
   }
 
   public toggleTask(task: Task): void {
-  const newStatus = task.status === 'completado' ? 'pendiente' : 'completado';
-  this.taskService.updateTasks(task.id, { status: newStatus });
-  this.tasks = this.taskService.getTasks().filter(t => t.type === 'tarea');
-}
+    const newStatus = task.status === 'completado' ? 'pendiente' : 'completado';
+    this.taskService.updateTasks(task.id, { status: newStatus });
+  }
 
 }
