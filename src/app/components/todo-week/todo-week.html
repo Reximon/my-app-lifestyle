@@ -1,0 +1,10 @@
+<section class="todo-week">
+  <h2>Tareas de la semana</h2>
+  @for (task of tasks; track task.id) {
+    <div class="task-item" [class.completed]="task.status === 'completado'">
+      <input type="checkbox" [checked]="task.status === 'completado'"
+             (change)="toggleTask(task)">
+      <span>{{ task.title }}</span>
+    </div>
+  }
+</section>

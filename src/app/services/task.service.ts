@@ -4,6 +4,7 @@ import { Task } from '../models/task.model'
 @Injectable({
   providedIn: 'root',
 })
+
 export class TaskService {
     private storageKey = 'academic-os-task'
 
