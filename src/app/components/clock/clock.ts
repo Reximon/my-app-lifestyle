@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-clock',
@@ -7,6 +7,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
   styleUrl: './clock.scss',
 })
 export class Clock implements OnInit, OnDestroy {
+      constructor(private cdr: ChangeDetectorRef) {}
+
       public date: string = '';
       public digitalTime: string = '';
       public hoursDeg = 0;
@@ -31,6 +33,7 @@ export class Clock implements OnInit, OnDestroy {
         this.hoursDeg = h * 30 + m * 0.5;
         this.minutesDeg = m * 6 + s * 0.1;
         this.secondsDeg = s * 6;
+        this.cdr.detectChanges();
       }
 
       ngOnDestroy(): void {

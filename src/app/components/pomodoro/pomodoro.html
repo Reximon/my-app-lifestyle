@@ -1,0 +1,8 @@
+<section class="pomodoro">
+  <div class="timer">{{ minutes }}:{{ seconds | number:'2.0' }}</div>
+  <div class="status">{{ isBreak ? 'Descanso' : 'Trabajo' }}</div>
+  <div class="controls">
+    <button (click)="toggle()">{{ isRunning ? 'Pausa' : 'Inicio' }}</button>
+    <button (click)="reset()">Reset</button>
+  </div>
+</section>
