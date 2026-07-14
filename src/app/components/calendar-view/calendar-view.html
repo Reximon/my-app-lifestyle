@@ -3,6 +3,11 @@
     <button (click)="prevMonth()">‹</button>
     <span>{{ currentMonth.toLocaleString('es-ES', { month: 'long', year: 'numeric' }) }}</span>
     <button (click)="nextMonth()">›</button>
+    @if (!isGoogleSignedIn) {
+      <button class="google-btn" (click)="googleCalendar.signIn()">G</button>
+    } @else {
+      <span class="google-user" (click)="loadGoogleEvents()">{{ googleCalendar.userEmail }}</span>
+    }
   </div>
 
   <div class="weekdays">
@@ -19,6 +24,11 @@
             @for (t of getTasksForDay(day); track t.id) {
               <div class="task-chip" (click)="openTask(t)" [style.borderLeftColor]="t.type === 'tarea' ? '#4ade80' : t.type === 'assignment' ? '#60a5fa' : t.type === 'clase' ? '#fbbf24' : '#a78bfa'">
                 {{ t.title }}
+              </div>
+            }
+            @for (e of getGoogleEventsForDay(day); track e.id) {
+              <div class="task-chip google" (click)="openGoogleEvent(e)" [title]="e.summary">
+                {{ e.summary }}
               </div>
             }
           </div>
@@ -42,6 +52,20 @@
       <div class="modal-actions">
         <button (click)="saveTask()">Guardar</button>
         <button (click)="deleteTask(selectedTask.id)">Borrar</button>
+        <button (click)="closeModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+}
+@if (selectedGoogleEvent) {
+  <div class="modal-overlay" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <h3><input [(ngModel)]="selectedGoogleEvent.summary" placeholder="Título"></h3>
+      <p>Inicio: {{ selectedGoogleEvent.start?.dateTime || selectedGoogleEvent.start?.date }}</p>
+      <input type="datetime-local" [(ngModel)]="selectedGoogleEvent.start.dateTime" placeholder="Inicio">
+      <div class="modal-actions">
+        <button (click)="saveGoogleEvent()">Guardar</button>
+        <button (click)="deleteGoogleEvent()">Borrar</button>
         <button (click)="closeModal()">Cancelar</button>
       </div>
     </div>

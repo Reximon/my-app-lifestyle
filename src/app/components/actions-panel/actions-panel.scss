@@ -1,22 +1,22 @@
 .actions-panel {
-  background: #1a1a3e;
+  background: var(--bg-card);
   border-radius: 8px;
   padding: 16px;
 
   h2 {
     font-size: 1.1rem;
     margin-bottom: 12px;
-    color: #a78bfa;
+    color: var(--accent);
   }
 
   select, input {
     width: 100%;
     padding: 8px 12px;
     margin-bottom: 8px;
-    border: 1px solid #2d2d5e;
+    border: 1px solid var(--border);
     border-radius: 6px;
-    background: #0f0f23;
-    color: #e0e0e0;
+    background: var(--bg-primary);
+    color: var(--text-primary);
     font-size: 0.9rem;
   }
 
@@ -25,8 +25,8 @@
     padding: 10px;
     border: none;
     border-radius: 6px;
-    background: #a78bfa;
-    color: #0f0f23;
+    background: var(--accent);
+    color: #fff;
     font-weight: 600;
     cursor: pointer;
   }

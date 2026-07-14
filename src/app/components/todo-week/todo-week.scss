@@ -1,12 +1,12 @@
 .todo-week {
-  background: #1a1a3e;
+  background: var(--bg-card);
   border-radius: 8px;
   padding: 16px;
 
   h2 {
     font-size: 1.1rem;
     margin-bottom: 12px;
-    color: #a78bfa;
+    color: var(--accent);
   }
 
   .filters {
@@ -16,17 +16,17 @@
 
     button {
       padding: 4px 12px;
-      border: 1px solid #2d2d5e;
+      border: 1px solid var(--border);
       border-radius: 12px;
       background: transparent;
-      color: #e0e0e0;
+      color: var(--text-primary);
       font-size: 0.8rem;
       cursor: pointer;
 
       &.active {
-        background: #a78bfa;
-        color: #0f0f23;
-        border-color: #a78bfa;
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
       }
     }
   }
@@ -36,7 +36,7 @@
     align-items: center;
     gap: 10px;
     padding: 8px 0;
-    border-bottom: 1px solid #2d2d5e;
+    border-bottom: 1px solid var(--border);
 
     span {
       font-size: 0.9rem;
@@ -65,15 +65,15 @@
   .checkmark {
     position: absolute;
     inset: 0;
-    background: #0f0f23;
-    border: 2px solid #2d2d5e;
+    background: var(--bg-primary);
+    border: 2px solid var(--border);
     border-radius: 20px;
     transition: 0.2s;
   }
 
   input:checked + .checkmark {
-    background: #a78bfa;
-    border-color: #a78bfa;
+    background: var(--accent);
+    border-color: var(--accent);
   }
 
   input:checked + .checkmark::after {
@@ -83,7 +83,7 @@
     top: 1px;
     width: 5px;
     height: 9px;
-    border: solid #0f0f23;
+    border: solid var(--bg-primary);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
   }
