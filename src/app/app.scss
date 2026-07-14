@@ -5,7 +5,12 @@
   gap: 16px;
   padding: 16px;
 }
-
+.banner-img {
+  object-fit: cover;
+  height: 400px;
+  width: 100%;
+  object-position: 0% 30%;
+}
 .sidebar-left {
   display: flex;
   flex-direction: column;

@@ -28,7 +28,8 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/environments"
+              "src/environments",
+              "src/img"
             ],
             "styles": [
               "src/styles.scss"
