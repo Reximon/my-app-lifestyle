@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TaskService } from '../../services/task.service';
 import { GoogleCalendar } from '../../services/google-calendar';
@@ -10,7 +10,7 @@ import { Task } from '../../models/task.model';
   templateUrl: './calendar-view.html',
   styleUrl: './calendar-view.scss',
 })
-export class CalendarView implements OnInit{
+export class CalendarView implements OnInit, AfterViewInit {
 
   public currentMonth: Date = new Date();
   public calendarDays: (number | null)[] = [];
@@ -19,6 +19,8 @@ export class CalendarView implements OnInit{
   public selectedGoogleEvent: any = null
   public googleEvents: any[] = [];
   public isGoogleSignedIn = false;
+  public eventsByDay: Map<number, any[]> = new Map();
+  public tasksByDay: Map<number, Task[]> = new Map();
 
   constructor(
     private taskService: TaskService,
@@ -26,15 +28,41 @@ export class CalendarView implements OnInit{
     private cdr: ChangeDetectorRef
   ) {}
 
-  // Esto incializa el calendario
   ngOnInit(): void {
     this.generateCalendar();
-    // Escuchar cambios del servicio Google Calendar
+    this.buildMaps();
     this.googleCalendar.onStateChange.subscribe(() => {
       this.googleEvents = this.googleCalendar.events;
       this.isGoogleSignedIn = this.googleCalendar.isSignedIn;
+      this.buildMaps();
       this.cdr.detectChanges();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.cdr.detectChanges();
+  }
+
+  private buildMaps(): void {
+    const prefix = `${this.currentMonth.getFullYear()}-${(this.currentMonth.getMonth() + 1).toString().padStart(2, '0')}`;
+    this.tasksByDay.clear();
+    this.eventsByDay.clear();
+    const allTasks = this.taskService.getTasks();
+    for (const t of allTasks) {
+      if (!t.dueDate?.startsWith(prefix)) continue;
+      const day = parseInt(t.dueDate.slice(-2), 10);
+      if (!this.tasksByDay.has(day)) this.tasksByDay.set(day, []);
+      this.tasksByDay.get(day)!.push(t);
+    }
+    for (const e of this.googleEvents) {
+      let dateStr: string | null = null;
+      if (e.start?.dateTime) dateStr = e.start.dateTime.substring(0, 10);
+      else if (e.start?.date) dateStr = e.start.date;
+      if (!dateStr?.startsWith(prefix)) continue;
+      const day = parseInt(dateStr.slice(-2), 10);
+      if (!this.eventsByDay.has(day)) this.eventsByDay.set(day, []);
+      this.eventsByDay.get(day)!.push(e);
+    }
   }
   private generateCalendar(): void {
     const year = this.currentMonth.getFullYear();
@@ -54,28 +82,23 @@ export class CalendarView implements OnInit{
     this.googleCalendar.listEvents();
   }
 
-  public getGoogleEventsForDay(day: number): any[] {
-    const dateStr = `${this.currentMonth.getFullYear()}-${(this.currentMonth.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-    const filtered = this.googleEvents.filter((e: any) =>
-      e.start?.dateTime?.startsWith(dateStr) || e.start?.date === dateStr
-    );
-    if (filtered.length > 0) console.log('Eventos para', dateStr, filtered);
-    return filtered;
+  public isToday(day: number): boolean {
+    const today = new Date();
+    return day === today.getDate()
+      && this.currentMonth.getMonth() === today.getMonth()
+      && this.currentMonth.getFullYear() === today.getFullYear();
   }
 
   public prevMonth() {
     this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1, 1);
     this.generateCalendar();
+    this.buildMaps();
   }
 
   public nextMonth() {
     this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1, 1)
     this.generateCalendar();
-  }
-
-  public getTasksForDay(day: number) {
-    const dateStr = `${this.currentMonth.getFullYear()}-${(this.currentMonth.getMonth() + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-    return this.taskService.getTasks().filter(t => t.dueDate?.startsWith(dateStr));
+    this.buildMaps();
   }
 
   // Modal para clicar en la tarea
@@ -92,15 +115,53 @@ export class CalendarView implements OnInit{
     this.selectedGoogleEvent = null;
   }
 
+  private buildGoogleEventBody(task: Task): any {
+    if (!task.dueDate) return null;
+    const start = `${task.dueDate}T09:00:00`;
+    const end = `${task.dueDate}T10:00:00`;
+    return {
+      summary: task.title,
+      description: task.description || '',
+      start: { dateTime: start, timeZone: 'Europe/Madrid' },
+      end: { dateTime: end, timeZone: 'Europe/Madrid' },
+    };
+  }
+
   public deleteTask(id: string): void {
+    const task = this.taskService.getTasks().find(t => t.id === id);
+    if (task?.googleEventId && this.isGoogleSignedIn) {
+      this.googleCalendar.deleteEvent(task.googleEventId);
+    }
     this.taskService.deleteTasks(id);
     this.closeModal();
   }
+
   public saveTask(): void {
-    if (this.selectedTask) {
-      this.taskService.updateTasks(this.selectedTask.id, this.selectedTask);
-      this.closeModal();
+    if (!this.selectedTask) return;
+    const task = this.selectedTask;
+    this.taskService.updateTasks(task.id, task);
+
+    console.log('saveTask', { signedIn: this.isGoogleSignedIn, dueDate: task.dueDate, googleEventId: task.googleEventId });
+
+    if (!this.isGoogleSignedIn) { this.closeModal(); return; }
+
+    const body = this.buildGoogleEventBody(task);
+    console.log('Google body:', body);
+
+    if (task.googleEventId && !body) {
+      this.googleCalendar.deleteEvent(task.googleEventId);
+      this.taskService.updateTasks(task.id, { googleEventId: undefined });
+    } else if (task.googleEventId && body) {
+      this.googleCalendar.updateEvent(task.googleEventId, body);
+    } else if (!task.googleEventId && body) {
+      this.googleCalendar.createEvent(body).then((event: any) => {
+        console.log('Evento creado:', event);
+        if (event?.id) {
+          this.taskService.updateTasks(task.id, { googleEventId: event.id });
+        }
+      });
     }
+    this.closeModal();
   }
 
   public saveGoogleEvent(): void {

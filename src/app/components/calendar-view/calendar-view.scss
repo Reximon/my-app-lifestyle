@@ -83,6 +83,10 @@
     background: none;
   }
 
+  &.today {
+    border: 2px solid var(--text-primary);
+  }
+
   .day-number {
     font-size: 0.75rem;
     color: var(--text-secondary);

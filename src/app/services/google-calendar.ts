@@ -54,6 +54,10 @@ export class GoogleCalendar {
       .catch(() => this.onStateChange.next());
   }
 
+  public isConnected(): boolean {
+    return this.isSignedIn && !!this.accessToken;
+  }
+
   public signIn(): void {
     if (!this.tokenClient) return;
     this.accessToken = null;
@@ -67,36 +71,38 @@ export class GoogleCalendar {
     this.onStateChange.next();
   }
 
-  public createEvent(eventData: any): void {
-    if (!this.accessToken) return;
-    fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
+  public createEvent(eventData: any): Promise<any> {
+    if (!this.accessToken) return Promise.reject('No token');
+    return fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
       method: 'POST',
       headers: { Authorization: `Bearer ${this.accessToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(eventData),
     })
-      .then(() => this.listEvents())
-      .catch((err) => console.error('Error creando evento:', err));
+      .then(res => res.json())
+      .then(data => { this.listEvents(); return data; })
+      .catch((err) => { console.error('Error creando evento:', err); throw err; });
   }
 
-  public updateEvent(eventId: string, eventData: any): void {
-    if (!this.accessToken) return;
-    fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
+  public updateEvent(eventId: string, eventData: any): Promise<any> {
+    if (!this.accessToken) return Promise.reject('No token');
+    return fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
       method: 'PATCH',
       headers: { Authorization: `Bearer ${this.accessToken}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(eventData),
     })
-      .then(() => this.listEvents())
-      .catch((err) => console.error('Error actualizando evento:', err));
+      .then(res => res.json())
+      .then(data => { this.listEvents(); return data; })
+      .catch((err) => { console.error('Error actualizando evento:', err); throw err; });
   }
 
-  public deleteEvent(eventId: string): void {
-    if (!this.accessToken) return;
-    fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
+  public deleteEvent(eventId: string): Promise<any> {
+    if (!this.accessToken) return Promise.reject('No token');
+    return fetch(`https://www.googleapis.com/calendar/v3/calendars/primary/events/${eventId}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${this.accessToken}` },
     })
       .then(() => this.listEvents())
-      .catch((err) => console.error('Error borrando evento:', err));
+      .catch((err) => { console.error('Error borrando evento:', err); throw err; });
   }
 
   public listEvents(): void {

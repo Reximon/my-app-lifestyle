@@ -17,16 +17,16 @@
 
   <div class="days-grid">
     @for (day of calendarDays; track $index) {
-      <div class="day-cell" [class.empty]="day === null">
+      <div class="day-cell" [class.empty]="day === null" [class.today]="day !== null && isToday(day)">
         @if (day !== null) {
           <div class="day-number">{{ day }}</div>
           <div class="tasks">
-            @for (t of getTasksForDay(day); track t.id) {
+            @for (t of tasksByDay.get(day) || []; track t.id) {
               <div class="task-chip" (click)="openTask(t)" [style.borderLeftColor]="t.type === 'tarea' ? '#4ade80' : t.type === 'assignment' ? '#60a5fa' : t.type === 'clase' ? '#fbbf24' : '#a78bfa'">
                 {{ t.title }}
               </div>
             }
-            @for (e of getGoogleEventsForDay(day); track e.id) {
+            @for (e of eventsByDay.get(day) || []; track e.id) {
               <div class="task-chip google" (click)="openGoogleEvent(e)" [title]="e.summary">
                 {{ e.summary }}
               </div>

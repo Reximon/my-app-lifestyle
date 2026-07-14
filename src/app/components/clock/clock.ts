@@ -33,7 +33,29 @@ export class Clock implements OnInit, OnDestroy {
         this.hoursDeg = h * 30 + m * 0.5;
         this.minutesDeg = m * 6 + s * 0.1;
         this.secondsDeg = s * 6;
+        this.updateFavicon(now.getDate());
         this.cdr.detectChanges();
+      }
+
+      private updateFavicon(day: number): void {
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const ctx = canvas.getContext('2d')!;
+        ctx.fillStyle = '#0f0f1a';
+        ctx.fillRect(0, 0, 32, 32);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 20px Poppins, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(String(day), 16, 16);
+        let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
+        if (!link) {
+          link = document.createElement('link');
+          link.rel = 'icon';
+          document.head.appendChild(link);
+        }
+        link.href = canvas.toDataURL();
       }
 
       ngOnDestroy(): void {

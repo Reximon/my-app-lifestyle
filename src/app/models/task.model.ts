@@ -6,4 +6,5 @@ export interface Task {
   status: 'pendiente' | 'en progreso' | 'completado';
   dueDate?: string;
   createdAt: string;
+  googleEventId?: string;
 }
