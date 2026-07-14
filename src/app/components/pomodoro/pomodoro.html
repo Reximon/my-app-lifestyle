@@ -1,8 +1,8 @@
-<section class="pomodoro">
+<section class="pomodoro" [class.break-mode]="isBreak">
   <div class="timer">{{ minutes }}:{{ seconds | number:'2.0' }}</div>
   <div class="status">{{ isBreak ? 'Descanso' : 'Trabajo' }}</div>
   <div class="controls">
-    <button (click)="toggle()">{{ isRunning ? 'Pausa' : 'Inicio' }}</button>
-    <button (click)="reset()">Reset</button>
+    <button (click)="toggle()"><fa-icon [icon]="['fas', isRunning ? 'pause' : 'play']"></fa-icon> {{ isRunning ? 'Pausa' : 'Inicio' }}</button>
+    <button (click)="reset()"><fa-icon [icon]="['fas', 'rotate']"></fa-icon> Reset</button>
   </div>
 </section>

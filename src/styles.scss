@@ -22,6 +22,34 @@
 
 body {
   font-family: 'Poppins', 'Segoe UI', sans-serif;
-  background: var(--bg-primary);
+  background: radial-gradient(ellipse at 50% 0%, #121225 0%, var(--bg-primary) 70%);
+  background-attachment: fixed;
   color: var(--text-primary);
+}
+
+section, .modal {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+
+@media (hover: hover) {
+  section:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  }
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
 }

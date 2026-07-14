@@ -10,6 +10,15 @@
     }
   </div>
 
+  <div class="type-filters">
+    <button [class.active]="filterType === 'todas'" (click)="setFilterType('todas')"><fa-icon [icon]="['fas', 'list-check']"></fa-icon> Todas</button>
+    <button [class.active]="filterType === 'tarea'" (click)="setFilterType('tarea')"><fa-icon [icon]="['fas', 'check']"></fa-icon> Tarea</button>
+    <button [class.active]="filterType === 'clase'" (click)="setFilterType('clase')"><fa-icon [icon]="['fas', 'chalkboard']"></fa-icon> Clase</button>
+    <button [class.active]="filterType === 'assignment'" (click)="setFilterType('assignment')"><fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon> Asign.</button>
+    <button [class.active]="filterType === 'topic'" (click)="setFilterType('topic')"><fa-icon [icon]="['fas', 'book']"></fa-icon> Topic</button>
+    <button [class.active]="filterType === 'nota'" (click)="setFilterType('nota')"><fa-icon [icon]="['fas', 'file-lines']"></fa-icon> Nota</button>
+  </div>
+
   <div class="weekdays">
     <span>Lun</span> <span>Mar</span> <span>Mié</span>
     <span>Jue</span> <span>Vie</span> <span>Sáb</span> <span>Dom</span>

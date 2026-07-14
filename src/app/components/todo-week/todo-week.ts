@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { TaskService } from '../../services/task.service';
 import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-todo-week',
-  imports: [],
+  imports: [DatePipe, FaIconComponent],
   templateUrl: './todo-week.html',
   styleUrl: './todo-week.scss',
 })
 export class TodoWeek implements OnInit {
 
   public tasks: Task[] = [];
-  public filterStatus: string = 'todas';
+  public filterStatus: string = 'pendiente';
 
   constructor(private taskService: TaskService) {}
 
@@ -25,7 +27,14 @@ export class TodoWeek implements OnInit {
     if (this.filterStatus === 'completado') {
       return this.tasks.filter(t => t.status === 'completado');
     }
-    return this.tasks.filter(t => t.status === 'pendiente');
+    if (this.filterStatus === 'pendiente') {
+      return this.tasks.filter(t => t.status === 'pendiente');
+    }
+    return [...this.tasks].sort((a, b) => {
+      if (a.status === 'pendiente' && b.status === 'completado') return -1;
+      if (a.status === 'completado' && b.status === 'pendiente') return 1;
+      return 0;
+    });
   }
 
   public toggleTask(task: Task): void {

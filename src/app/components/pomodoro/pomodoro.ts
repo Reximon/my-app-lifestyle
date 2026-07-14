@@ -1,9 +1,10 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, ChangeDetectorRef } from '@angular/core';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-pomodoro',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, FaIconComponent],
   templateUrl: './pomodoro.html',
   styleUrl: './pomodoro.scss',
 })

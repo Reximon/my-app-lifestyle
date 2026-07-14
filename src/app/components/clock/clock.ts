@@ -45,10 +45,10 @@ export class Clock implements OnInit, OnDestroy {
         ctx.fillStyle = '#0f0f1a';
         ctx.fillRect(0, 0, 32, 32);
         ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 20px Poppins, sans-serif';
+        ctx.font = 'bold 22px Poppins, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(String(day), 16, 16);
+        ctx.fillText(String(day), 16, 17);
         let link = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
         if (!link) {
           link = document.createElement('link');

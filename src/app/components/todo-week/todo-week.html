@@ -2,19 +2,41 @@
   <h2>Tareas de la semana</h2>
 
   <div class="filters">
-    <button [class.active]="filterStatus === 'todas'" (click)="filterStatus = 'todas'">Todas</button>
-    <button [class.active]="filterStatus === 'pendiente'" (click)="filterStatus = 'pendiente'">Pendientes</button>
-    <button [class.active]="filterStatus === 'completado'" (click)="filterStatus = 'completado'">Completadas</button>
+    <button [class.active]="filterStatus === 'todas'" (click)="filterStatus = 'todas'"><fa-icon [icon]="['fas', 'list-check']"></fa-icon> Todas</button>
+    <button [class.active]="filterStatus === 'pendiente'" (click)="filterStatus = 'pendiente'"><fa-icon [icon]="['fas', 'clock']"></fa-icon> Pendientes</button>
+    <button [class.active]="filterStatus === 'completado'" (click)="filterStatus = 'completado'"><fa-icon [icon]="['fas', 'check-double']"></fa-icon> Completadas</button>
   </div>
 
-  @for (task of filteredTasks; track task.id) {
-    <div class="task-item" [class.completed]="task.status === 'completado'">
-      <label class="custom-checkbox">
-        <input type="checkbox" [checked]="task.status === 'completado'"
-               (change)="toggleTask(task)">
-        <span class="checkmark"></span>
-      </label>
-      <span>{{ task.title }}</span>
-    </div>
-  }
+  <table class="task-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Tarea</th>
+        <th>Vence</th>
+        <th>Creada</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (task of filteredTasks; track task.id) {
+        <tr [class.completed]="task.status === 'completado'">
+          <td>
+            <label class="custom-checkbox">
+              <input type="checkbox" [checked]="task.status === 'completado'"
+                     (change)="toggleTask(task)">
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td class="task-title">{{ task.title }}</td>
+          <td>
+            <span class="task-status-badge" [class.done]="task.status === 'completado'">
+              {{ task.status }}
+            </span>
+          </td>
+          <td>{{ task.dueDate || '-' }}</td>
+          <td>{{ task.createdAt ? (task.createdAt | date: 'dd/MM/yyyy') : '-' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </section>

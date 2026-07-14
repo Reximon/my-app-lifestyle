@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { TaskService } from '../../services/task.service';
 import { GoogleCalendar } from '../../services/google-calendar';
 import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-actions-panel',
-  imports: [FormsModule],
+  imports: [FormsModule, FaIconComponent],
   templateUrl: './actions-panel.html',
   styleUrl: './actions-panel.scss',
 })

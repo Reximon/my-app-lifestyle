@@ -1,12 +1,13 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { TaskService } from '../../services/task.service';
 import { GoogleCalendar } from '../../services/google-calendar';
 import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-calendar-view',
-  imports: [FormsModule],
+  imports: [FormsModule, FaIconComponent],
   templateUrl: './calendar-view.html',
   styleUrl: './calendar-view.scss',
 })
@@ -21,6 +22,7 @@ export class CalendarView implements OnInit, AfterViewInit {
   public isGoogleSignedIn = false;
   public eventsByDay: Map<number, any[]> = new Map();
   public tasksByDay: Map<number, Task[]> = new Map();
+  public filterType: string = 'todas';
 
   constructor(
     private taskService: TaskService,
@@ -49,6 +51,7 @@ export class CalendarView implements OnInit, AfterViewInit {
     this.eventsByDay.clear();
     const allTasks = this.taskService.getTasks();
     for (const t of allTasks) {
+      if (this.filterType !== 'todas' && t.type !== this.filterType) continue;
       if (!t.dueDate?.startsWith(prefix)) continue;
       const day = parseInt(t.dueDate.slice(-2), 10);
       if (!this.tasksByDay.has(day)) this.tasksByDay.set(day, []);
@@ -80,6 +83,11 @@ export class CalendarView implements OnInit, AfterViewInit {
 
   public loadGoogleEvents(): void {
     this.googleCalendar.listEvents();
+  }
+
+  public setFilterType(type: string): void {
+    this.filterType = type;
+    this.buildMaps();
   }
 
   public isToday(day: number): boolean {
