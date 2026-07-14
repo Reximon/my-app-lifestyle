@@ -1,0 +1,147 @@
+.calendar {
+  background: #1a1a3e;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+
+  button {
+    background: none;
+    border: none;
+    color: #a78bfa;
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 4px 12px;
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+}
+
+.weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 4px;
+  padding: 4px 0;
+
+  span {
+    padding: 4px 0;
+  }
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.day-cell {
+  min-height: 90px;
+  background: #16163a;
+  border-radius: 4px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+
+  &.empty {
+    background: none;
+  }
+
+  .day-number {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 2px;
+  }
+  .tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+  }
+
+  .task-chip {
+    font-size: 0.65rem;
+    color: #e0e0e0;
+    background: #1e1e4a;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border-left: 3px solid;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  background: #1a1a3e;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #a78bfa;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #888;
+  }
+
+  input, select {
+    padding: 8px 12px;
+    border: 1px solid #2d2d5e;
+    border-radius: 6px;
+    background: #0f0f23;
+    color: #e0e0e0;
+    font-size: 0.9rem;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+
+    button {
+      flex: 1;
+      padding: 8px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+
+      &:nth-child(1) { background: #a78bfa; color: #0f0f23; }
+      &:nth-child(2) { background: #ef4444; color: #fff; }
+      &:nth-child(3) { background: transparent; color: #888; border: 1px solid #2d2d5e; }
+    }
+  }
+}
+

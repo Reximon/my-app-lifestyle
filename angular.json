@@ -27,12 +27,15 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              "src/environments"
             ],
             "styles": [
               "src/styles.scss"
             ],
-
+            "scripts": [
+              "https://apis.google.com/js/api.js"
+            ],
             "security": {
               "allowedHosts": []
             }
