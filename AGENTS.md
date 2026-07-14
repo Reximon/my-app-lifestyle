@@ -1,52 +1,72 @@
 # my-academic-os
 
-Angular 21 standalone project, SSR disabled, zoneless mode (`ChangeDetectorRef` required for all async updates).
-Dark theme via CSS variables in `styles.scss`, font: Poppins.
+Angular 21 standalone, SSR disabled, zoneless mode (`ChangeDetectorRef` for all async updates).
+Dark theme with custom CSS variables (`styles.scss`), font: Poppins.
 Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 
-## Google OAuth2
-- GIS library (`google.accounts.oauth2`) via `GoogleCalendar` service
-- Scopes: `calendar` + `userinfo.email`
-- `src/environments/` is gitignored (holds `googleClientId`)
+## Design System
+- **Background**: `radial-gradient(ellipse at 50% 0%, #121225, #0a0a0f 70%)` fixed
+- **Cards**: `--bg-card: #1a1a2e`, border-radius 8-12px, shadow hover lift
+- **Accent**: `#7c5cfc` (purple), glow: `rgba(124,92,252,0.2)`
+- **Section headers**: Left accent bar (3px) + translucent bg (no full purple bg)
+- **Selects**: Inset shadow 3D effect, focus glow + scale(1.01), custom purple chevron
+- **Scrollbar**: 6px thin, `--border` color
+- **::selection**: accent purple bg
+
+## Font Awesome
+- `@fortawesome/angular-fontawesome@4` + free-solid/regular/brands
+- Global library in `app.ts` constructor via `FaIconLibrary.addIcons()`
+- `FaIconComponent` imported in each component that uses `<fa-icon>`
+- Icons: check, plus, play, pause, rotate, trash, save, times, filter, calendar, clock, upload, list-check, mosquito, book, chalkboard, clipboard-list, file-lines, check-double
 
 ## Components
 
 ### Clock (`components/clock/`)
-- Analog SVG face + hands, hour ticks, digital 24h overlay, date
-- Uses `ChangeDetectorRef` + `setInterval`
+- Analog SVG (240x240px), hands + hour ticks, digital overlay with date
+- `setInterval` + `ChangeDetectorRef`
+- **Favicon**: Dynamic canvas renders current day number (22px Poppins, dark bg, white text)
 
 ### ActionsPanel (`components/actions-panel/`)
-- Form: type select, title, optional date
-- `create()`: saves task locally + syncs to Google Calendar if connected and has `dueDate`
+- Form: type `<select>`, title `<input>`, date `<input>`
+- `create()`: saves task locally + syncs to Google Calendar if `isConnected()` and `dueDate` exists
 
 ### TodoWeek (`components/todo-week/`)
-- Lists tasks where `type === 'tarea'`
-- Filter buttons: todas / pendientes / completadas
-- Custom checkbox (border-radius 20px) toggles completion
+- Lists tasks where `type === 'tarea'` in a **table** (columns: checkbox, Tarea, Vence, Creada, Estado)
+- **Default filter**: `'pendiente'` (shows only pending on load)
+- Filter buttons with icons: Todas (list-check), Pendientes (clock), Completadas (check-double)
+- **Status badge**: orange (`#f59e0b`) for pendiente, green (accent) for completado
+- Checkbox: square (3px border-radius), 16px
+- Sort: pending first, completed last (in "Todas" view)
 
 ### Pomodoro (`components/pomodoro/`)
-- 25min focus / 5min break timer
-- Start / Pause / Reset
+- 25min work / 5min break
+- **Marble gradient background**: 5 radial-gradient layers (violet veins for work, amber for break)
+- Timer: 3.2rem, weight 300, letter-spacing 4px, debossed text-shadow
+- Status: pill badge (violet / orange)
+- Buttons: play/pause (accent with shadow), reset (ghost)
 - `Notification` API on completion
 
 ### CalendarView (`components/calendar-view/`)
-- Month grid, prev/next navigation, today highlight
-- Local tasks shown as colored chips in cells
-- Google Calendar events shown as `.google` chips
-- Click chip -> modal (edit/delete)
-- `saveTask()`: local update + Google Calendar CRUD via `googleEventId`
-- Tasks/events precomputed in `tasksByDay`/`eventsByDay` Maps (no function calls in template)
+- Month grid, prev/next, today highlight with **"HOY" bookmark tab**
+- **Grid lines**: via `gap: 1px` + `background: var(--border)` on container
+- **Task chips**: sticky-note style with alternating rotation (-0.3° / +0.3°), shadow, hover scale
+- **Google events**: red-tinted bg, italic, no rotation
+- **Type filters**: Todas/Tarea/Clase/Asign/Topic/Nota with icons
+- Click chip → modal (edit/delete)
+- `saveTask()`: local + Google Calendar CRUD via `googleEventId`
+- Precomputed `tasksByDay`/`eventsByDay` Maps
+- **Modal**: backdrop-filter blur, 12px radius, deep shadow
 
 ## Services
 
 ### TaskService (`services/task.service.ts`)
-- localStorage-backed CRUD, `BehaviorSubject<Task[]>`
+- localStorage (`academic-os-task`), BehaviorSubject
 
 ### GoogleCalendar (`services/google-calendar.ts`)
-- `initTokenClient()`, `signIn()`, `signOut()`, `isConnected()`
-- `listEvents()` (3-month window), `createEvent()`, `updateEvent()`, `deleteEvent()` — all via `fetch()`
-- `fetchUserInfo()` sets `userEmail`
-- `onStateChange` Subject notifies subscribers
+- GIS `google.accounts.oauth2`, scopes: calendar + userinfo.email
+- `isConnected()`, `signIn()`, `signOut()`, `listEvents()`, `createEvent()`, `updateEvent()`, `deleteEvent()`
+- CRUD returns Promise with data
+- `onStateChange` Subject
 
 ## Models
 
@@ -64,9 +84,18 @@ interface Task {
 }
 ```
 
-## Debug Logs
-- `ActionsPanel.create()`: `console.log('Google body', body)`, `console.log('Google event created:', event.id)`, `console.error('Google create failed', e)`
-- `GoogleCalendar.listEvents()`: `console.log('Eventos recibidos:', data)`
+## Assets
+- **Banner**: `src/img/bg.jpg` served via `"src/img"` in angular.json assets
+- **Banner CSS**: 220px height, object-fit cover, object-position 0% 30%
+- `public/favicon.ico` removed (dynamic favicon via clock canvas)
 
-## Next Move
-User to reload app, create a task with a due date via ActionsPanel, check F12 for `Google body` and `Google event created` logs.
+## Debug Logs
+- `ActionsPanel.create()`: `'Google body'`, `'Google event created:'`, `'Google create failed'`
+- `GoogleCalendar.listEvents()`: `'Eventos recibidos:'`
+
+## Last Commits
+- `861f55e style: ajustar padding bookmark HOY en calendario`
+- `eda5d8d feat: rediseño visual completo con marmolado, planner y tarjetas mejoradas`
+- `46aa96d feat: agrandar reloj, agregar Font Awesome y banner`
+- `685a72f build: agregar Font Awesome como librería de iconos`
+- `e90a6aa feat: agregar imagen de banner y configurar assets img`
