@@ -64,6 +64,9 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "ssl": true
+          },
           "configurations": {
             "production": {
               "buildTarget": "my-academic-os:build:production"
