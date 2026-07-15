@@ -15,6 +15,7 @@ export class Objectives {
   public objectives: Objective[] = [];
   public activeScope: Objective['scope'] = 'daily';
   public showModal = false;
+  public editObjective: Objective | null = null;
   public modalScope: Objective['scope'] = 'daily';
   public modalTitle = '';
   public modalDescription = '';
@@ -54,10 +55,20 @@ export class Objectives {
   }
 
   openAdd(scope: Objective['scope']): void {
+    this.editObjective = null;
     this.modalScope = scope;
     this.modalTitle = '';
     this.modalDescription = '';
     this.modalDueDate = '';
+    this.showModal = true;
+  }
+
+  openEdit(o: Objective): void {
+    this.editObjective = o;
+    this.modalScope = o.scope;
+    this.modalTitle = o.title;
+    this.modalDescription = o.description || '';
+    this.modalDueDate = o.dueDate || '';
     this.showModal = true;
   }
 
@@ -68,16 +79,27 @@ export class Objectives {
   saveModal(): void {
     const title = this.modalTitle.trim();
     if (!title) return;
-    const obj: Objective = {
-      id: Date.now().toString(),
-      scope: this.modalScope,
-      title,
-      description: this.modalDescription || undefined,
-      dueDate: this.modalDueDate || undefined,
-      status: 'pendiente',
-      createdAt: new Date().toISOString(),
-    };
-    this.objectiveService.addObjective(obj);
+
+    if (this.editObjective) {
+      this.objectiveService.updateObjective(this.editObjective.id, {
+        scope: this.modalScope,
+        title,
+        description: this.modalDescription || undefined,
+        dueDate: this.modalDueDate || undefined,
+      });
+    } else {
+      const obj: Objective = {
+        id: Date.now().toString(),
+        scope: this.modalScope,
+        title,
+        description: this.modalDescription || undefined,
+        dueDate: this.modalDueDate || undefined,
+        status: 'pendiente',
+        createdAt: new Date().toISOString(),
+      };
+      this.objectiveService.addObjective(obj);
+    }
+
     this.activeScope = this.modalScope;
     this.closeModal();
   }

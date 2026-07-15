@@ -15,6 +15,7 @@
         <th>Vence</th>
         <th>Creada</th>
         <th>Estado</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -27,16 +28,61 @@
               <span class="checkmark"></span>
             </label>
           </td>
-          <td class="task-title">{{ task.title }}</td>
+          <td class="task-title" (dblclick)="openEdit(task)">{{ task.title }}</td>
+          <td>{{ task.dueDate || '-' }}</td>
+          <td>{{ task.createdAt ? (task.createdAt | date: 'dd/MM/yyyy') : '-' }}</td>
           <td>
             <span class="task-status-badge" [class.done]="task.status === 'completado'">
               {{ task.status }}
             </span>
           </td>
-          <td>{{ task.dueDate || '-' }}</td>
-          <td>{{ task.createdAt ? (task.createdAt | date: 'dd/MM/yyyy') : '-' }}</td>
+          <td>
+            <button class="task-edit" (click)="openEdit(task)" title="Editar">
+              <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+            </button>
+          </td>
         </tr>
       }
     </tbody>
   </table>
 </section>
+
+@if (showModal) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <fa-icon [icon]="['fas', 'list-check']"></fa-icon>
+        <span>Editar tarea</span>
+        <button class="modal-close" (click)="closeModal()">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label>
+          Título
+          <input [(ngModel)]="modalTitle" placeholder="Nombre de la tarea">
+        </label>
+        <label>
+          Descripción
+          <textarea [(ngModel)]="modalDescription" placeholder="Opcional"></textarea>
+        </label>
+        <label>
+          Fecha
+          <input type="date" [(ngModel)]="modalDueDate">
+        </label>
+        <label>
+          Estado
+          <select [(ngModel)]="modalStatus">
+            <option value="pendiente">Pendiente</option>
+            <option value="en progreso">En progreso</option>
+            <option value="completado">Completado</option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveModal()" [disabled]="!modalTitle.trim()">Guardar</button>
+      </div>
+    </div>
+  </div>
+}

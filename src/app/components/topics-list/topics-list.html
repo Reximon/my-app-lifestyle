@@ -7,7 +7,7 @@
 
   <div class="topics-body">
     @for (t of topics; track t.id) {
-      <div class="topic-item" [class.done]="t.status === 'completado'" (click)="openEdit(t)">
+      <div class="topic-item" [class.done]="t.status === 'completado'">
         <label class="topic-check" (click)="$event.stopPropagation()">
           <input
             type="checkbox"
@@ -16,7 +16,7 @@
           >
           <span class="checkmark"></span>
         </label>
-        <div class="topic-info">
+        <div class="topic-info" (dblclick)="openEdit(t)">
           <span class="topic-title">{{ t.title }}</span>
           @if (t.description) {
             <span class="topic-desc">{{ t.description }}</span>
@@ -25,6 +25,9 @@
         @if (t.dueDate) {
           <span class="topic-date">{{ t.dueDate }}</span>
         }
+        <button class="topic-edit" (click)="openEdit(t); $event.stopPropagation();" title="Editar">
+          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        </button>
         <button class="topic-del" (click)="deleteTopic(t.id); $event.stopPropagation();" title="Eliminar">
           <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
         </button>

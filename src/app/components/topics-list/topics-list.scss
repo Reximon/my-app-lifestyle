@@ -41,7 +41,7 @@
   &:hover {
     background: var(--bg-secondary);
 
-    .topic-del {
+    .topic-del, .topic-edit {
       opacity: 1;
     }
   }
@@ -84,6 +84,24 @@
   color: var(--text-secondary);
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.topic-edit {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 0.55rem;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--accent);
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
 
 .topic-del {

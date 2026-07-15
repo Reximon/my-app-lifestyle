@@ -24,7 +24,7 @@
           >
           <span class="checkmark"></span>
         </label>
-        <div class="obj-info">
+        <div class="obj-info" (dblclick)="openEdit(o)">
           <span class="obj-title">{{ o.title }}</span>
           @if (o.description) {
             <span class="obj-desc">{{ o.description }}</span>
@@ -33,6 +33,9 @@
         @if (o.dueDate) {
           <span class="obj-date">{{ o.dueDate }}</span>
         }
+        <button class="obj-edit" (click)="openEdit(o)" title="Editar">
+          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+        </button>
         <button class="obj-del" (click)="deleteObjective(o.id)" title="Eliminar">
           <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
         </button>
@@ -55,7 +58,7 @@
     <div class="modal" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
-        <span>Nuevo objetivo</span>
+        <span>{{ editObjective ? 'Editar' : 'Nuevo' }} objetivo</span>
         <button class="modal-close" (click)="closeModal()">
           <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
         </button>
@@ -84,7 +87,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
-        <button class="btn-save" (click)="saveModal()" [disabled]="!modalTitle.trim()">Añadir</button>
+        <button class="btn-save" (click)="saveModal()" [disabled]="!modalTitle.trim()">{{ editObjective ? 'Guardar' : 'Añadir' }}</button>
       </div>
     </div>
   </div>
