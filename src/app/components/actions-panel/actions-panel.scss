@@ -37,17 +37,17 @@
 
   select {
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237c5cfc' d='M1 1l5 5 5-5' stroke='%237c5cfc' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23ffffff' d='M1 1l5 5 5-5' stroke='%23ffffff' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
     padding-right: 36px;
     cursor: pointer;
     letter-spacing: 0.3px;
 
-    option {
-      background: #1a1a2e;
-      color: var(--text-primary);
-    }
+      option {
+        background: var(--bg-card);
+        color: var(--text-primary);
+      }
   }
 
   button {
@@ -56,7 +56,7 @@
     border: none;
     border-radius: 6px;
     background: var(--accent);
-    color: #fff;
+    color: #000;
     font-weight: 600;
     cursor: pointer;
   }

@@ -25,7 +25,7 @@
 
       &.active {
         background: var(--accent);
-        color: #fff;
+        color: #000;
         border-color: var(--accent);
       }
     }
@@ -75,13 +75,14 @@
     font-size: 0.7rem;
     padding: 2px 8px;
     border-radius: 8px;
-    background: #f59e0b;
+    background: #555555;
     color: #fff;
     text-transform: capitalize;
     display: inline-block;
 
     &.done {
       background: var(--accent);
+      color: #000;
     }
   }
 }
