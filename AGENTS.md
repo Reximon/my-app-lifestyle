@@ -59,6 +59,14 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 - **Imporante**: También escucha `taskService.tasks$` (no solo Google Calendar) para refrescar tareas locales al instante
 - **Modal**: backdrop-filter blur, 12px radius, deep shadow
 
+### TopicsList (`components/topics-list/`)
+- Lista de topics (tasks con `type: 'topic'`) en la sidebar derecha
+- Checkbox para marcar completado (tachado + opacidad)
+- Botón eliminar (hover reveal)
+- Input inline para añadir nuevo topic
+- Contador de topics en el header
+- Se sincera con `TaskService.tasks$` en tiempo real
+
 ### Spotify (`components/spotify/`)
 - Biblioteca multi-playlist vía **embeds de Spotify** (no requiere API OAuth ni Premium)
 - Playlists guardadas en localStorage como array `{ id, label }`
@@ -115,7 +123,7 @@ interface Task {
 8. ~~Calendario con Google Calendar API~~ ✔️
 9. ~~Pomodoro~~ ✔️
 10. Notas de clase (AWS, carnet de conducir, etc.)
-11. Lista de Topics (sidebar derecha)
+11. ~~Lista de Topics (sidebar derecha)~~ ✔️
 
 ## Last Commits
 - `865a95e fix: CalendarView escucha cambios del TaskService`

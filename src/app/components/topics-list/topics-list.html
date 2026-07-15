@@ -1,0 +1,41 @@
+<section class="topics">
+  <div class="topics-header">
+    <fa-icon [icon]="['fas', 'book']"></fa-icon>
+    <span>Topics</span>
+    <span class="count">{{ topics.length }}</span>
+  </div>
+
+  <div class="topics-body">
+    @for (t of topics; track t.id) {
+      <div class="topic-item" [class.done]="t.status === 'completado'">
+        <label class="topic-check">
+          <input
+            type="checkbox"
+            [checked]="t.status === 'completado'"
+            (change)="toggleStatus(t)"
+          >
+          <span class="checkmark"></span>
+        </label>
+        <span class="topic-title">{{ t.title }}</span>
+        <button class="topic-del" (click)="deleteTopic(t.id)" title="Eliminar">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+    }
+
+    @if (!topics.length) {
+      <p class="empty">Sin topics aún</p>
+    }
+  </div>
+
+  <div class="topic-add">
+    <input
+      [(ngModel)]="newTitle"
+      (keyup.enter)="addTopic()"
+      placeholder="Nuevo topic..."
+    >
+    <button (click)="addTopic()" [disabled]="!newTitle.trim()">
+      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    </button>
+  </div>
+</section>

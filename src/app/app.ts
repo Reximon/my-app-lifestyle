@@ -9,10 +9,11 @@ import { TodoWeek } from './components/todo-week/todo-week';
 import { Pomodoro } from './components/pomodoro/pomodoro';
 import { CalendarView } from './components/calendar-view/calendar-view';
 import { Spotify } from './components/spotify/spotify';
+import { TopicsList } from './components/topics-list/topics-list';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FaIconComponent, Clock, ActionsPanel, TodoWeek, Pomodoro, CalendarView, Spotify],
+  imports: [RouterOutlet, FaIconComponent, Clock, ActionsPanel, TodoWeek, Pomodoro, CalendarView, Spotify, TopicsList],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
