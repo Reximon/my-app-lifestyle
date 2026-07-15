@@ -19,6 +19,7 @@ export class Spotify {
   public activeIndex = 0;
   public inputUrl = '';
   public inputLabel = '';
+  public showModal = false;
 
   private storageKey = 'spotify-playlists';
   private defaultEntry: PlaylistEntry = {
@@ -26,10 +27,7 @@ export class Spotify {
     label: 'Default',
   };
 
-  constructor(
-    private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef,
-  ) {
+  constructor(private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
     const saved = localStorage.getItem(this.storageKey);
     if (saved) {
       try {
@@ -51,6 +49,16 @@ export class Spotify {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
+  public openModal(): void {
+    this.inputUrl = '';
+    this.inputLabel = '';
+    this.showModal = true;
+  }
+
+  public closeModal(): void {
+    this.showModal = false;
+  }
+
   public addPlaylist(): void {
     const url = this.inputUrl.trim();
     const id = this.extractId(url);
@@ -60,8 +68,7 @@ export class Spotify {
     this.playlists.push({ id, label });
     this.save();
     this.activeIndex = this.playlists.length - 1;
-    this.inputUrl = '';
-    this.inputLabel = '';
+    this.showModal = false;
     this.cdr.markForCheck();
   }
 
@@ -82,14 +89,13 @@ export class Spotify {
   }
 
   private deriveLabel(id: string): string {
-    const [type] = id.split('/');
     const map: Record<string, string> = {
       playlist: 'Playlist',
       track: 'Track',
       album: 'Álbum',
       episode: 'Episodio',
     };
-    return map[type] || 'Spotify';
+    return map[id.split('/')[0]] || 'Spotify';
   }
 
   private extractId(url: string): string | null {

@@ -46,22 +46,48 @@
     }
   </div>
 
-  <div class="playlist-add">
-    <div class="add-row">
-      <input
-        [(ngModel)]="inputLabel"
-        placeholder="Nombre"
-        class="label-input"
-      >
-      <input
-        [(ngModel)]="inputUrl"
-        (keyup.enter)="addPlaylist()"
-        placeholder="URL de Spotify"
-        class="url-input"
-      >
-      <button (click)="addPlaylist()" [disabled]="!inputUrl.trim()" title="Añadir">
-        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-      </button>
+  <button class="add-btn" (click)="openModal()">
+    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    Añadir playlist
+  </button>
+</section>
+
+@if (showModal) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <fa-icon [icon]="['fab', 'spotify']"></fa-icon>
+        <span>Añadir playlist</span>
+        <button class="modal-close" (click)="closeModal()">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <label>
+          URL de Spotify
+          <input
+            [(ngModel)]="inputUrl"
+            (keyup.enter)="addPlaylist()"
+            placeholder="https://open.spotify.com/playlist/..."
+          >
+        </label>
+        <label>
+          Nombre (opcional)
+          <input
+            [(ngModel)]="inputLabel"
+            placeholder="Mi playlist"
+          >
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="addPlaylist()" [disabled]="!inputUrl.trim()">
+          <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+          Añadir
+        </button>
+      </div>
     </div>
   </div>
-</section>
+}
