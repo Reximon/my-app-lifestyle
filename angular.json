@@ -65,7 +65,7 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "ssl": true
+            "host": "0.0.0.0"
           },
           "configurations": {
             "production": {
