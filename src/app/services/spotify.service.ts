@@ -47,7 +47,7 @@ export class SpotifyService {
       const params = new URLSearchParams({
         client_id: this.clientId,
         response_type: 'code',
-        redirect_uri: window.location.origin,
+        redirect_uri: environment.spotifyRedirectUri,
         code_challenge_method: 'S256',
         code_challenge: challenge,
         state,
@@ -111,7 +111,7 @@ export class SpotifyService {
     const body = new URLSearchParams({
       grant_type: 'authorization_code',
       code,
-      redirect_uri: window.location.origin,
+      redirect_uri: environment.spotifyRedirectUri,
       client_id: this.clientId,
       code_verifier: verifier,
     });

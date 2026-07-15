@@ -1,6 +1,7 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { environment } from '../../../environments/environment';
 import { SpotifyService } from '../../services/spotify.service';
 
 @Component({
@@ -37,8 +38,8 @@ export class Spotify {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  get origin(): string {
-    return window.location.origin;
+  get redirectUri(): string {
+    return environment.spotifyRedirectUri || window.location.origin;
   }
 
   connect(): void {
