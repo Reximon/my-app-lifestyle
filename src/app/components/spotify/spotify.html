@@ -1,11 +1,9 @@
 <section class="spotify">
-  <div class="spotify-header">
+  <header class="spotify-header">
     <fa-icon [icon]="['fab', 'spotify']"></fa-icon>
-    <span>Spotify</span>
-    <button class="reset-btn" (click)="resetUrl()" title="Restaurar default">
-      <fa-icon [icon]="['fas', 'rotate']"></fa-icon>
-    </button>
-  </div>
+    <span>Biblioteca</span>
+    <span class="count">{{ playlists.length }}</span>
+  </header>
 
   @if (embedUrl) {
     <iframe
@@ -13,19 +11,57 @@
       [src]="embedUrl"
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
       loading="lazy"
+      title="Reproductor Spotify"
     ></iframe>
   }
 
-  <div class="spotify-controls">
-    <input
-      [(ngModel)]="inputUrl"
-      (keyup.enter)="loadUrl()"
-      placeholder="URL de playlist / track..."
-    >
-    <button (click)="loadUrl()" [disabled]="!inputUrl.trim()">Cargar</button>
+  <div class="playlist-list">
+    <div class="list-title">Tus listas</div>
+    @for (p of playlists; track p.id; let i = $index) {
+      <div
+        class="playlist-item"
+        [class.active]="i === activeIndex"
+        (click)="select(i)"
+      >
+        <span class="index">{{ i + 1 | number:'2.0' }}</span>
+        <fa-icon [icon]="['fas', 'music']" class="item-icon"></fa-icon>
+        <span class="label">{{ p.label }}</span>
+        <div class="actions">
+          <button
+            class="play-btn"
+            (click)="select(i); $event.stopPropagation();"
+            title="Reproducir"
+          >
+            <fa-icon [icon]="['fas', 'play']"></fa-icon>
+          </button>
+          <button
+            class="remove-btn"
+            (click)="remove(i); $event.stopPropagation();"
+            title="Quitar"
+          >
+            <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+          </button>
+        </div>
+      </div>
+    }
   </div>
 
-  @if (saved) {
-    <span class="saved-msg">Playlist guardada</span>
-  }
+  <div class="playlist-add">
+    <div class="add-row">
+      <input
+        [(ngModel)]="inputLabel"
+        placeholder="Nombre"
+        class="label-input"
+      >
+      <input
+        [(ngModel)]="inputUrl"
+        (keyup.enter)="addPlaylist()"
+        placeholder="URL de Spotify"
+        class="url-input"
+      >
+      <button (click)="addPlaylist()" [disabled]="!inputUrl.trim()" title="Añadir">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+      </button>
+    </div>
+  </div>
 </section>

@@ -107,10 +107,14 @@ interface Task {
 11. Lista de Topics (sidebar derecha)
 
 ## Spotify (`components/spotify/`)
-- Embed iframe personalizable: input para pegar URL de playlist/track/album
-- Guarda en localStorage la URL elegida
-- Botón reset para volver a playlist default de estudio
-- Icono Spotify verde + "Cargar"
+- Biblioteca multi-playlist: guarda varias URLs en localStorage como array
+- Lista completa de playlists guardadas con número de catálogo (01, 02...)
+- Reproductor grande (352px) que muestra lista de tracks
+- Selector rápido: click en cualquier playlist de la lista para cambiar
+- Botón play + eliminar individual por playlist
+- Input de añadir con nombre opcional y URL
+- Default: Peaceful Piano playlist
+- Estilo de catálogo/archivo con número de índice, icono, y hover reveals actions
 
 ## Last Commits
 - (next commit)

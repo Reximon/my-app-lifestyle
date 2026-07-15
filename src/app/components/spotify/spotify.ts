@@ -1,46 +1,92 @@
 import { Component } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
+interface PlaylistEntry {
+  id: string;
+  label: string;
+}
+
 @Component({
   selector: 'app-spotify',
-  imports: [FormsModule, FaIconComponent],
+  imports: [FormsModule, FaIconComponent, DecimalPipe],
   templateUrl: './spotify.html',
   styleUrl: './spotify.scss',
 })
 export class Spotify {
+  public playlists: PlaylistEntry[] = [];
+  public activeIndex = 0;
   public inputUrl = '';
-  public embedUrl: SafeResourceUrl | null = null;
-  public saved = false;
+  public inputLabel = '';
 
-  private storageKey = 'spotify-embed-url';
-  private defaultUrl = 'https://open.spotify.com/embed/playlist/37i9dQZF1DX3Ogo9pFvBkY?utm_source=generator';
+  private storageKey = 'spotify-playlists';
+  private defaultEntry: PlaylistEntry = {
+    id: 'playlist/37i9dQZF1DX3Ogo9pFvBkY',
+    label: 'Peaceful Piano',
+  };
 
   constructor(private sanitizer: DomSanitizer) {
     const saved = localStorage.getItem(this.storageKey);
     if (saved) {
-      this.embedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(saved);
-      this.saved = true;
+      try {
+        this.playlists = JSON.parse(saved);
+        if (!this.playlists.length) this.playlists = [this.defaultEntry];
+      } catch {
+        this.playlists = [this.defaultEntry];
+      }
     } else {
-      this.embedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.defaultUrl);
+      this.playlists = [this.defaultEntry];
+      this.save();
     }
   }
 
-  public loadUrl(): void {
-    const id = this.extractId(this.inputUrl.trim());
-    if (!id) return;
-    const embed = `https://open.spotify.com/embed/${id}?utm_source=generator`;
-    this.embedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(embed);
-    localStorage.setItem(this.storageKey, embed);
-    this.saved = true;
-    this.inputUrl = '';
+  get embedUrl(): SafeResourceUrl | null {
+    const entry = this.playlists[this.activeIndex];
+    if (!entry) return null;
+    const url = `https://open.spotify.com/embed/${entry.id}?utm_source=generator`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
-  public resetUrl(): void {
-    localStorage.removeItem(this.storageKey);
-    this.embedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.defaultUrl);
-    this.saved = false;
+  public addPlaylist(): void {
+    const url = this.inputUrl.trim();
+    const id = this.extractId(url);
+    if (!id) return;
+    if (this.playlists.some(p => p.id === id)) return;
+    const label = this.inputLabel.trim() || this.deriveLabel(id);
+    this.playlists.push({ id, label });
+    this.save();
+    this.activeIndex = this.playlists.length - 1;
+    this.inputUrl = '';
+    this.inputLabel = '';
+  }
+
+  public select(i: number): void {
+    this.activeIndex = i;
+  }
+
+  public remove(i: number): void {
+    this.playlists.splice(i, 1);
+    this.save();
+    if (this.activeIndex >= this.playlists.length) {
+      this.activeIndex = Math.max(0, this.playlists.length - 1);
+    }
+  }
+
+  private save(): void {
+    localStorage.setItem(this.storageKey, JSON.stringify(this.playlists));
+  }
+
+  private deriveLabel(id: string): string {
+    const [type] = id.split('/');
+    const map: Record<string, string> = {
+      playlist: 'Playlist',
+      track: 'Track',
+      album: 'Álbum',
+      episode: 'Episodio',
+    };
+    return map[type] || 'Spotify';
   }
 
   private extractId(url: string): string | null {
