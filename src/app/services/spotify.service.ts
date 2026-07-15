@@ -39,9 +39,6 @@ export class SpotifyService {
 
   login(): void {
     const verifier = this.generateVerifier();
-    const state = this.generateState();
-    localStorage.setItem('spotify-verifier', verifier);
-    localStorage.setItem('spotify-state', state);
 
     this.generateChallenge(verifier).then(challenge => {
       const params = new URLSearchParams({
@@ -50,8 +47,8 @@ export class SpotifyService {
         redirect_uri: environment.spotifyRedirectUri,
         code_challenge_method: 'S256',
         code_challenge: challenge,
-        state,
-        scope: 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-read-recently-played',
+        state: verifier,
+        scope: 'user-read-private user-read-email playlist-read-private playlist-read-collaborative',
       });
       window.location.href = `https://accounts.spotify.com/authorize?${params}`;
     });
@@ -95,16 +92,12 @@ export class SpotifyService {
   private handleRedirectCallback(): void {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
-    const state = params.get('state');
-    const savedState = localStorage.getItem('spotify-state');
-    const verifier = localStorage.getItem('spotify-verifier');
+    const verifier = params.get('state');
 
-    if (code && state === savedState && verifier) {
-      this.exchangeCode(code, verifier);
-      localStorage.removeItem('spotify-state');
-      localStorage.removeItem('spotify-verifier');
-      window.history.replaceState({}, '', window.location.pathname);
-    }
+    if (!code || !verifier) return;
+
+    window.history.replaceState({}, '', window.location.pathname);
+    this.exchangeCode(code, verifier);
   }
 
   private async exchangeCode(code: string, verifier: string): Promise<void> {
@@ -130,6 +123,8 @@ export class SpotifyService {
           access_token: this.accessToken,
           expires_at: this.expiresAt,
         }));
+      } else {
+        console.error('Spotify exchange error:', data);
       }
     } catch (e) {
       console.error('Spotify token exchange failed:', e);
