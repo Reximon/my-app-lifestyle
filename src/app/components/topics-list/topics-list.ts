@@ -12,7 +12,12 @@ import { Task } from '../../models/task.model';
 })
 export class TopicsList {
   public topics: Task[] = [];
-  public newTitle = '';
+  public showModal = false;
+  public editTopic: Task | null = null;
+  public modalTitle = '';
+  public modalDescription = '';
+  public modalDueDate = '';
+  public modalStatus: Task['status'] = 'pendiente';
 
   constructor(
     private taskService: TaskService,
@@ -29,18 +34,52 @@ export class TopicsList {
     this.topics = this.taskService.getTasks().filter(t => t.type === 'topic');
   }
 
-  public addTopic(): void {
-    const title = this.newTitle.trim();
+  public openAdd(): void {
+    this.editTopic = null;
+    this.modalTitle = '';
+    this.modalDescription = '';
+    this.modalDueDate = '';
+    this.modalStatus = 'pendiente';
+    this.showModal = true;
+  }
+
+  public openEdit(t: Task): void {
+    this.editTopic = t;
+    this.modalTitle = t.title;
+    this.modalDescription = t.description || '';
+    this.modalDueDate = t.dueDate || '';
+    this.modalStatus = t.status;
+    this.showModal = true;
+  }
+
+  public closeModal(): void {
+    this.showModal = false;
+  }
+
+  public saveModal(): void {
+    const title = this.modalTitle.trim();
     if (!title) return;
-    const task: Task = {
-      id: Date.now().toString(),
-      type: 'topic',
-      title,
-      status: 'pendiente',
-      createdAt: new Date().toISOString(),
-    };
-    this.taskService.addTask(task);
-    this.newTitle = '';
+
+    if (this.editTopic) {
+      this.taskService.updateTasks(this.editTopic.id, {
+        title,
+        description: this.modalDescription || undefined,
+        dueDate: this.modalDueDate || undefined,
+        status: this.modalStatus,
+      });
+    } else {
+      const task: Task = {
+        id: Date.now().toString(),
+        type: 'topic',
+        title,
+        description: this.modalDescription || undefined,
+        dueDate: this.modalDueDate || undefined,
+        status: this.modalStatus,
+        createdAt: new Date().toISOString(),
+      };
+      this.taskService.addTask(task);
+    }
+    this.closeModal();
   }
 
   public toggleStatus(topic: Task): void {

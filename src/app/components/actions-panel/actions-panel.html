@@ -11,6 +11,7 @@
   </select>
 
   <input [(ngModel)]="title" placeholder="Título">
+  <input [(ngModel)]="description" placeholder="Descripción (opcional)">
   <input type="date" [(ngModel)]="dueDate">
 
   <button (click)="create()"><fa-icon [icon]="['fas', 'plus']"></fa-icon> Crear</button>

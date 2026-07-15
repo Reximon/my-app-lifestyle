@@ -7,8 +7,8 @@
 
   <div class="topics-body">
     @for (t of topics; track t.id) {
-      <div class="topic-item" [class.done]="t.status === 'completado'">
-        <label class="topic-check">
+      <div class="topic-item" [class.done]="t.status === 'completado'" (click)="openEdit(t)">
+        <label class="topic-check" (click)="$event.stopPropagation()">
           <input
             type="checkbox"
             [checked]="t.status === 'completado'"
@@ -16,8 +16,16 @@
           >
           <span class="checkmark"></span>
         </label>
-        <span class="topic-title">{{ t.title }}</span>
-        <button class="topic-del" (click)="deleteTopic(t.id)" title="Eliminar">
+        <div class="topic-info">
+          <span class="topic-title">{{ t.title }}</span>
+          @if (t.description) {
+            <span class="topic-desc">{{ t.description }}</span>
+          }
+        </div>
+        @if (t.dueDate) {
+          <span class="topic-date">{{ t.dueDate }}</span>
+        }
+        <button class="topic-del" (click)="deleteTopic(t.id); $event.stopPropagation();" title="Eliminar">
           <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
         </button>
       </div>
@@ -28,14 +36,52 @@
     }
   </div>
 
-  <div class="topic-add">
-    <input
-      [(ngModel)]="newTitle"
-      (keyup.enter)="addTopic()"
-      placeholder="Nuevo topic..."
-    >
-    <button (click)="addTopic()" [disabled]="!newTitle.trim()">
-      <fa-icon [icon]="['fas', 'plus']"></fa-icon>
-    </button>
-  </div>
+  <button class="topic-add-btn" (click)="openAdd()">
+    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    Añadir topic
+  </button>
 </section>
+
+@if (showModal) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <fa-icon [icon]="['fas', 'book']"></fa-icon>
+        <span>{{ editTopic ? 'Editar' : 'Añadir' }} topic</span>
+        <button class="modal-close" (click)="closeModal()">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <label>
+          Título
+          <input [(ngModel)]="modalTitle" placeholder="Nombre del topic">
+        </label>
+        <label>
+          Descripción
+          <textarea [(ngModel)]="modalDescription" placeholder="Descripción opcional"></textarea>
+        </label>
+        <label>
+          Fecha
+          <input type="date" [(ngModel)]="modalDueDate">
+        </label>
+        <label>
+          Estado
+          <select [(ngModel)]="modalStatus">
+            <option value="pendiente">Pendiente</option>
+            <option value="en progreso">En progreso</option>
+            <option value="completado">Completado</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveModal()" [disabled]="!modalTitle.trim()">
+          {{ editTopic ? 'Guardar' : 'Añadir' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
