@@ -1,102 +1,67 @@
-@if (!spotify.hasClientId) {
-  <section class="spotify">
-    <div class="setup-msg">
-      <fa-icon [icon]="['fab', 'spotify']"></fa-icon>
-      <p>Para conectar Spotify necesitas un <strong>Client ID</strong>.</p>
-      <ol>
-        <li>Ve a <a href="https://developer.spotify.com/dashboard" target="_blank">Spotify Developer Dashboard</a></li>
-        <li>Crea una app y copia el Client ID</li>
-        <li>Agrega <code>{{ redirectUri }}</code> como Redirect URI</li>
-        <li>Pon el ID en <code>environments/environment.ts</code></li>
-      </ol>
-    </div>
-  </section>
-} @else if (!spotify.isConnected) {
-  <section class="spotify">
-    <div class="connect-prompt">
-      <fa-icon [icon]="['fab', 'spotify']" class="spotify-icon"></fa-icon>
-      <p>Conecta tu cuenta de Spotify</p>
-      <button class="connect-btn" (click)="connect()">
-        <fa-icon [icon]="['fas', 'arrow-right-to-bracket']"></fa-icon>
-        Conectar
-      </button>
-    </div>
-  </section>
-} @else {
-  <section class="spotify connected">
-    <header class="spotify-top">
-      <div class="user-info" (click)="selectPlaylist(null)">
-        @if (spotify.user?.images?.[0]?.url) {
-          <img
-            [src]="spotify.user.images[0].url"
-            alt="avatar"
-            class="avatar"
+<section class="spotify">
+  <header class="spotify-header">
+    <fa-icon [icon]="['fab', 'spotify']"></fa-icon>
+    <span>Biblioteca</span>
+    <span class="count">{{ playlists.length }}</span>
+  </header>
+
+  @if (activeEmbedUrl) {
+    <iframe
+      class="spotify-embed"
+      [src]="activeEmbedUrl"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"
+      title="Reproductor Spotify"
+    ></iframe>
+  }
+
+  <div class="playlist-list">
+    <div class="list-title">Tus listas</div>
+    @for (p of playlists; track p.id; let i = $index) {
+      <div
+        class="playlist-item"
+        [class.active]="i === activeIndex"
+        (click)="select(i)"
+      >
+        <span class="index">{{ i + 1 }}</span>
+        <fa-icon [icon]="['fas', 'music']" class="item-icon"></fa-icon>
+        <span class="label">{{ p.label }}</span>
+        <div class="actions">
+          <button
+            class="play-btn"
+            (click)="select(i); $event.stopPropagation();"
+            title="Reproducir"
           >
-        } @else {
-          <div class="avatar-placeholder">
-            <fa-icon [icon]="['fas', 'user']"></fa-icon>
-          </div>
-        }
-        <div class="user-text">
-          <span class="user-name">{{ spotify.user?.display_name || 'Usuario' }}</span>
-          <span class="user-label">Spotify</span>
+            <fa-icon [icon]="['fas', 'play']"></fa-icon>
+          </button>
+          <button
+            class="remove-btn"
+            (click)="remove(i); $event.stopPropagation();"
+            title="Quitar"
+          >
+            <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+          </button>
         </div>
       </div>
-      <button class="disconnect-btn" (click)="disconnect()" title="Desconectar">
-        <fa-icon [icon]="['fas', 'right-from-bracket']"></fa-icon>
+    }
+  </div>
+
+  <div class="playlist-add">
+    <div class="add-row">
+      <input
+        [(ngModel)]="inputLabel"
+        placeholder="Nombre"
+        class="label-input"
+      >
+      <input
+        [(ngModel)]="inputUrl"
+        (keyup.enter)="addPlaylist()"
+        placeholder="URL de Spotify"
+        class="url-input"
+      >
+      <button (click)="addPlaylist()" [disabled]="!inputUrl.trim()" title="Añadir">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon>
       </button>
-    </header>
-
-    @if (error) {
-      <div class="error-msg">{{ error }}</div>
-    }
-
-    @if (loading) {
-      <div class="loading">Cargando biblioteca...</div>
-    }
-
-    @if (activePlaylist && activeEmbedUrl) {
-      <iframe
-        class="spotify-embed"
-        [src]="activeEmbedUrl"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-        loading="lazy"
-        title="Reproductor Spotify"
-      ></iframe>
-    }
-
-    @if (spotify.playlists.length) {
-      <div class="section-title">
-        <fa-icon [icon]="['fas', 'headphones']"></fa-icon>
-        Biblioteca
-        <span class="badge">{{ spotify.playlists.length }}</span>
-      </div>
-
-      <div class="playlist-list">
-        @for (p of spotify.playlists; track p.id) {
-          <div
-            class="playlist-item"
-            [class.active]="activePlaylist?.id === p.id"
-            (click)="selectPlaylist(p)"
-          >
-            @if (p.images?.[0]?.url) {
-              <img [src]="p.images[0].url" alt="" class="cover">
-            } @else {
-              <div class="cover-placeholder">
-                <fa-icon [icon]="['fas', 'music']"></fa-icon>
-              </div>
-            }
-            <div class="info">
-              <span class="name">{{ p.name }}</span>
-              <span class="meta">{{ p.tracks?.total || 0 }} tracks</span>
-            </div>
-          </div>
-        }
-      </div>
-    }
-
-    @if (!spotify.playlists.length && !loading) {
-      <p class="empty">No se encontraron playlists.</p>
-    }
-  </section>
-}
+    </div>
+  </div>
+</section>
