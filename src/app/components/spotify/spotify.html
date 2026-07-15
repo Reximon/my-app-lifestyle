@@ -1,0 +1,31 @@
+<section class="spotify">
+  <div class="spotify-header">
+    <fa-icon [icon]="['fab', 'spotify']"></fa-icon>
+    <span>Spotify</span>
+    <button class="reset-btn" (click)="resetUrl()" title="Restaurar default">
+      <fa-icon [icon]="['fas', 'rotate']"></fa-icon>
+    </button>
+  </div>
+
+  @if (embedUrl) {
+    <iframe
+      class="spotify-embed"
+      [src]="embedUrl"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+      loading="lazy"
+    ></iframe>
+  }
+
+  <div class="spotify-controls">
+    <input
+      [(ngModel)]="inputUrl"
+      (keyup.enter)="loadUrl()"
+      placeholder="URL de playlist / track..."
+    >
+    <button (click)="loadUrl()" [disabled]="!inputUrl.trim()">Cargar</button>
+  </div>
+
+  @if (saved) {
+    <span class="saved-msg">Playlist guardada</span>
+  }
+</section>

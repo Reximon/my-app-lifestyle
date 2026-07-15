@@ -93,7 +93,27 @@ interface Task {
 - `ActionsPanel.create()`: `'Google body'`, `'Google event created:'`, `'Google create failed'`
 - `GoogleCalendar.listEvents()`: `'Eventos recibidos:'`
 
+## Componentes Faltantes (del prompt original)
+1. ~~Reloj~~ ✔️
+2. ~~Actions (crear tareas/clases/topics/notas/assignments)~~ ✔️
+3. ~~Spotify / YouTube~~ ✔️ (debajo del reloj)
+4. ~~Tareas de la semana (todo)~~ ✔️
+5. Galería de diagramas subidos
+6. Assignments / Proyectos semanales (con proyecto, tipo, estado, fecha)
+7. Objetivos (diarios, semanales, semestres)
+8. ~~Calendario con Google Calendar API~~ ✔️
+9. ~~Pomodoro~~ ✔️
+10. Notas de clase (AWS, carnet de conducir, etc.)
+11. Lista de Topics (sidebar derecha)
+
+## Spotify (`components/spotify/`)
+- Embed iframe personalizable: input para pegar URL de playlist/track/album
+- Guarda en localStorage la URL elegida
+- Botón reset para volver a playlist default de estudio
+- Icono Spotify verde + "Cargar"
+
 ## Last Commits
+- (next commit)
 - `861f55e style: ajustar padding bookmark HOY en calendario`
 - `eda5d8d feat: rediseño visual completo con marmolado, planner y tarjetas mejoradas`
 - `46aa96d feat: agrandar reloj, agregar Font Awesome y banner`
