@@ -1,0 +1,91 @@
+<section class="objectives">
+  <div class="obj-tabs">
+    @for (s of scopes; track s.key) {
+      <button
+        class="obj-tab"
+        [class.active]="activeScope === s.key"
+        (click)="setScope(s.key)"
+      >
+        <fa-icon [icon]="s.icon"></fa-icon>
+        {{ s.label }}
+        <span class="obj-count">{{ countByScope(s.key) }}</span>
+      </button>
+    }
+  </div>
+
+  <div class="obj-body">
+    @for (o of filtered; track o.id) {
+      <div class="obj-item" [class.done]="o.status === 'completado'">
+        <label class="obj-check" (click)="$event.stopPropagation()">
+          <input
+            type="checkbox"
+            [checked]="o.status === 'completado'"
+            (change)="toggleStatus(o)"
+          >
+          <span class="checkmark"></span>
+        </label>
+        <div class="obj-info">
+          <span class="obj-title">{{ o.title }}</span>
+          @if (o.description) {
+            <span class="obj-desc">{{ o.description }}</span>
+          }
+        </div>
+        @if (o.dueDate) {
+          <span class="obj-date">{{ o.dueDate }}</span>
+        }
+        <button class="obj-del" (click)="deleteObjective(o.id)" title="Eliminar">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+    }
+
+    @if (!filtered.length) {
+      <p class="empty">Sin objetivos</p>
+    }
+  </div>
+
+  <button class="obj-add-btn" (click)="openAdd(activeScope)">
+    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    Añadir objetivo
+  </button>
+</section>
+
+@if (showModal) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
+        <span>Nuevo objetivo</span>
+        <button class="modal-close" (click)="closeModal()">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label>
+          Ámbito
+          <select [(ngModel)]="modalScope">
+            <option value="daily">Diario</option>
+            <option value="weekly">Semanal</option>
+            <option value="semester">Semestral</option>
+          </select>
+        </label>
+        <label>
+          Título
+          <input [(ngModel)]="modalTitle" placeholder="¿Qué quieres lograr?">
+        </label>
+        <label>
+          Descripción
+          <textarea [(ngModel)]="modalDescription" placeholder="Opcional"></textarea>
+        </label>
+        <label>
+          Fecha límite
+          <input type="date" [(ngModel)]="modalDueDate">
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveModal()" [disabled]="!modalTitle.trim()">Añadir</button>
+      </div>
+    </div>
+  </div>
+}
