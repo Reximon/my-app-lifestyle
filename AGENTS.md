@@ -106,15 +106,14 @@ interface Task {
 10. Notas de clase (AWS, carnet de conducir, etc.)
 11. Lista de Topics (sidebar derecha)
 
-## Spotify (`components/spotify/`)
-- Biblioteca multi-playlist: guarda varias URLs en localStorage como array
-- Lista completa de playlists guardadas con número de catálogo (01, 02...)
-- Reproductor grande (352px) que muestra lista de tracks
-- Selector rápido: click en cualquier playlist de la lista para cambiar
-- Botón play + eliminar individual por playlist
-- Input de añadir con nombre opcional y URL
-- Default: Peaceful Piano playlist
-- Estilo de catálogo/archivo con número de índice, icono, y hover reveals actions
+## Spotify (`components/spotify/` + `services/spotify.service.ts`)
+- **Autenticación OAuth PKCE** con Spotify Web API
+- 3 estados: sin Client ID (guía de setup), no conectado (botón conectar), conectado (biblioteca)
+- Conectado: avatar + nombre de perfil, botón desconectar
+- Playlists del usuario cargadas desde la API con cover images y track count
+- Click en playlist → embed iframe (352px) del reproductor
+- **Client ID** va en `environments/environment.ts` (gitignored, como Google)
+- Scope: perfil, playlists, recently played, currently playing
 
 ## Last Commits
 - (next commit)
