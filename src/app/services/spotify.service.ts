@@ -82,11 +82,19 @@ export class SpotifyService {
     const res = await fetch(`https://api.spotify.com/v1${endpoint}`, {
       headers: { Authorization: `Bearer ${this.accessToken}` },
     });
+    const text = await res.text();
+    let data: any;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      console.error('Spotify API non-JSON response:', text.slice(0, 300));
+      throw new Error('Spotify API returned unexpected response');
+    }
     if (res.status === 401) {
       this.logout();
       throw new Error('Session expired');
     }
-    return res.json();
+    return data;
   }
 
   private handleRedirectCallback(): void {
@@ -115,26 +123,31 @@ export class SpotifyService {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body,
       });
-      const data = await res.json();
-      if (data.access_token) {
-        this.accessToken = data.access_token;
-        this.expiresAt = Date.now() + data.expires_in * 1000;
-        localStorage.setItem(this.storageKey, JSON.stringify({
-          access_token: this.accessToken,
-          expires_at: this.expiresAt,
-        }));
-      } else {
-        console.error('Spotify exchange error:', data);
+      const text = await res.text();
+      try {
+        const data = JSON.parse(text);
+        if (data.access_token) {
+          this.accessToken = data.access_token;
+          this.expiresAt = Date.now() + data.expires_in * 1000;
+          localStorage.setItem(this.storageKey, JSON.stringify({
+            access_token: this.accessToken,
+            expires_at: this.expiresAt,
+          }));
+        } else {
+          console.error('Spotify exchange error body:', data);
+        }
+      } catch {
+        console.error('Spotify exchange non-JSON response:', text.slice(0, 300));
       }
     } catch (e) {
-      console.error('Spotify token exchange failed:', e);
+      console.error('Spotify exchange network error:', e);
     }
     this.onStateChange.next();
   }
 
   private generateVerifier(): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
-    const array = new Uint8Array(64);
+    const array = new Uint8Array(32);
     crypto.getRandomValues(array);
     return Array.from(array, b => chars[b % chars.length]).join('');
   }
