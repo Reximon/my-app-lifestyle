@@ -26,6 +26,8 @@ export class Spotify {
     id: 'playlist/7bswmJOu8DVJgN0cwVwPXW',
     label: 'Default',
   };
+  private cachedEmbedUrl: SafeResourceUrl | null = null;
+  private cachedIndex = -1;
 
   constructor(private sanitizer: DomSanitizer, private cdr: ChangeDetectorRef) {
     const saved = localStorage.getItem(this.storageKey);
@@ -40,13 +42,22 @@ export class Spotify {
       this.playlists = [this.defaultEntry];
       this.save();
     }
+    this.buildEmbedUrl();
   }
 
   get activeEmbedUrl(): SafeResourceUrl | null {
+    return this.cachedEmbedUrl;
+  }
+
+  private buildEmbedUrl(): void {
     const entry = this.playlists[this.activeIndex];
-    if (!entry) return null;
-    const url = `https://open.spotify.com/embed/${entry.id}?utm_source=generator`;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    if (!entry) {
+      this.cachedEmbedUrl = null;
+    } else {
+      const url = `https://open.spotify.com/embed/${entry.id}?utm_source=generator`;
+      this.cachedEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
+    this.cachedIndex = this.activeIndex;
   }
 
   public openModal(): void {
@@ -68,12 +79,15 @@ export class Spotify {
     this.playlists.push({ id, label });
     this.save();
     this.activeIndex = this.playlists.length - 1;
+    this.buildEmbedUrl();
     this.showModal = false;
     this.cdr.markForCheck();
   }
 
   public select(i: number): void {
+    if (i === this.activeIndex) return;
     this.activeIndex = i;
+    this.buildEmbedUrl();
   }
 
   public remove(i: number): void {
@@ -82,6 +96,7 @@ export class Spotify {
     if (this.activeIndex >= this.playlists.length) {
       this.activeIndex = Math.max(0, this.playlists.length - 1);
     }
+    this.buildEmbedUrl();
   }
 
   private save(): void {
