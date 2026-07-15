@@ -39,17 +39,21 @@ export class CalendarView implements OnInit, AfterViewInit {
       this.buildMaps();
       this.cdr.detectChanges();
     });
+    this.taskService.tasks$.subscribe(tasks => {
+      this.buildMaps(tasks);
+      this.cdr.detectChanges();
+    });
   }
 
   ngAfterViewInit(): void {
     this.cdr.detectChanges();
   }
 
-  private buildMaps(): void {
+  private buildMaps(tasks?: Task[]): void {
     const prefix = `${this.currentMonth.getFullYear()}-${(this.currentMonth.getMonth() + 1).toString().padStart(2, '0')}`;
     this.tasksByDay.clear();
     this.eventsByDay.clear();
-    const allTasks = this.taskService.getTasks();
+    const allTasks = tasks ?? this.taskService.getTasks();
     for (const t of allTasks) {
       if (this.filterType !== 'todas' && t.type !== this.filterType) continue;
       if (!t.dueDate?.startsWith(prefix)) continue;
