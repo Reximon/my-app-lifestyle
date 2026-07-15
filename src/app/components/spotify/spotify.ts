@@ -22,8 +22,8 @@ export class Spotify {
 
   private storageKey = 'spotify-playlists';
   private defaultEntry: PlaylistEntry = {
-    id: 'playlist/37i9dQZF1DX3Ogo9pFvBkY',
-    label: 'Peaceful Piano',
+    id: 'playlist/7bswmJOu8DVJgN0cwVwPXW',
+    label: 'Default',
   };
 
   constructor(
