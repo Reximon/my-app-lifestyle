@@ -1,10 +1,4 @@
 <section class="spotify">
-  <header class="spotify-header">
-    <fa-icon [icon]="['fab', 'spotify']"></fa-icon>
-    <span>Biblioteca</span>
-    <span class="count">{{ playlists.length }}</span>
-  </header>
-
   @if (activeEmbedUrl) {
     <iframe
       class="spotify-embed"
