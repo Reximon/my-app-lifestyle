@@ -28,16 +28,17 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 - **Favicon**: Dynamic canvas renders current day number (22px Poppins, dark bg, white text)
 
 ### ActionsPanel (`components/actions-panel/`)
-- Form: type `<select>`, title `<input>`, date `<input>`
+- Form: type `<select>`, title `<input>`, description `<input>`, date `<input>`
 - `create()`: saves task locally + syncs to Google Calendar if `isConnected()` and `dueDate` exists
 
 ### TodoWeek (`components/todo-week/`)
-- Lists tasks where `type === 'tarea'` in a **table** (columns: checkbox, Tarea, Vence, Creada, Estado)
+- Lists tasks where `type === 'tarea'` in a **table** (columns: checkbox, Tarea, Estado, Vence, Creada, ✎)
 - **Default filter**: `'pendiente'` (shows only pending on load)
 - Filter buttons with icons: Todas (list-check), Pendientes (clock), Completadas (check-double)
 - **Status badge**: naranja `#f59e0b` (pendiente), verde `#22c55e` (completado)
 - Checkbox: square (3px border-radius), 16px
 - Sort: pending first, completed last (in "Todas" view)
+- **Edición**: botón lápiz hover + doble click en título → modal (título, descripción, fecha, estado)
 
 ### Pomodoro (`components/pomodoro/`)
 - 25min work / 5min break
@@ -62,10 +63,28 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 ### TopicsList (`components/topics-list/`)
 - Lista de topics (tasks con `type: 'topic'`) en la sidebar derecha
 - Checkbox para marcar completado (tachado + opacidad)
-- Botón eliminar (hover reveal)
-- Input inline para añadir nuevo topic
+- Botón eliminar (hover reveal) + botón lápiz hover
+- Doble click en título o click en lápiz → modal (título, descripción, fecha, estado)
+- Botón "Añadir topic" abre modal para crear
 - Contador de topics en el header
 - Se sincera con `TaskService.tasks$` en tiempo real
+
+### Objectives (`components/objectives/`)
+- Sección en main-content con 3 tabs: Diario (sun), Semanal (calendar-week), Semestral (graduation-cap)
+- Cada tab filtra objetivos por `scope` y muestra contador
+- Checkbox para toggle pendiente/completado (tachado)
+- Botón lápiz hover + doble click en título → modal de edición (ámbito, título, descripción, fecha)
+- Botón "Añadir objetivo" abre modal para crear
+- Persistencia propia en localStorage via `ObjectiveService`
+
+### Assignments (`components/assignments/`)
+- Tabla en main-content: checkbox, Título, Curso, Tipo, Estado, Vence, acciones
+- Badge tipo: gris (assignment) / blanco (proyecto)
+- Badge estado: naranja (pendiente), azul (entregado), verde (revisado)
+- Checkbox toggle: pendiente ↔ entregado
+- Botón lápiz + eliminar hover
+- Modal con campos: curso, tipo, título, descripción, fecha, estado
+- Persistencia en localStorage via `AssignmentService`
 
 ### Spotify (`components/spotify/`)
 - Biblioteca multi-playlist vía **embeds de Spotify** (no requiere API OAuth ni Premium)
@@ -81,6 +100,14 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 
 ### TaskService (`services/task.service.ts`)
 - localStorage (`academic-os-task`), BehaviorSubject (`tasks$`)
+
+### ObjectiveService (`services/objective.service.ts`)
+- localStorage (`academic-os-objectives`), BehaviorSubject (`objectives$`)
+- CRUD: `getObjectives()`, `addObjective()`, `updateObjective()`, `deleteObjective()`
+
+### AssignmentService (`services/assignment.service.ts`)
+- localStorage (`academic-os-assignments`), BehaviorSubject (`assignments$`)
+- CRUD: `getAssignments()`, `addAssignment()`, `updateAssignment()`, `deleteAssignment()`
 
 ### GoogleCalendar (`services/google-calendar.ts`)
 - GIS `google.accounts.oauth2`, scopes: calendar + userinfo.email
@@ -104,6 +131,33 @@ interface Task {
 }
 ```
 
+### Objective (`models/objective.model.ts`)
+```ts
+interface Objective {
+  id: string;
+  scope: 'daily' | 'weekly' | 'semester';
+  title: string;
+  description?: string;
+  status: 'pendiente' | 'completado';
+  createdAt: string;
+  dueDate?: string;
+}
+```
+
+### Assignment (`models/assignment.model.ts`)
+```ts
+interface Assignment {
+  id: string;
+  title: string;
+  course: string;
+  type: 'assignment' | 'project';
+  status: 'pendiente' | 'entregado' | 'revisado';
+  dueDate?: string;
+  description?: string;
+  createdAt: string;
+}
+```
+
 ## Assets
 - **Banner**: `src/img/bg.jpg`, 220px height, object-fit cover, object-position 0% 30%
 - `public/favicon.ico` removed (dynamic favicon via clock canvas)
@@ -118,14 +172,19 @@ interface Task {
 3. ~~Spotify / YouTube~~ ✔️
 4. ~~Tareas de la semana (todo)~~ ✔️
 5. Galería de diagramas subidos
-6. Assignments / Proyectos semanales (con proyecto, tipo, estado, fecha)
-7. Objetivos (diarios, semanales, semestres)
+6. ~~Assignments / Proyectos semanales~~ ✔️
+7. ~~Objetivos (diarios, semanales, semestres)~~ ✔️
 8. ~~Calendario con Google Calendar API~~ ✔️
 9. ~~Pomodoro~~ ✔️
 10. Notas de clase (AWS, carnet de conducir, etc.)
 11. ~~Lista de Topics (sidebar derecha)~~ ✔️
 
 ## Last Commits
+- `d28de52 fix: reordenar Assignments debajo de Objetivos con header`
+- `81f11af fix: Assignments component adaptado correctamente al modelo`
+- `b3ac6a0 feat: edición inline con lápiz hover y doble click en Tareas, Objetivos, Topics`
+- `3502b9d feat: sección Objetivos (daily/weekly/semester) con tabs, checkbox y modal`
+- `c380710 feat: campos completos en TopicsList + descripción en ActionsPanel`
 - `865a95e fix: CalendarView escucha cambios del TaskService`
 - `c3580a1 fix: badge completado en verde (#22c55e)`
 - `f400086 fix: badge pendiente vuelve a naranja`
