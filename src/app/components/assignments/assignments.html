@@ -1,0 +1,120 @@
+<section class="assignments">
+  <div class="assignments-header">
+    <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon>
+    <span>Assignments / Proyectos</span>
+    <span class="count">{{ assignments.length }}</span>
+  </div>
+
+  <table class="assign-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Título</th>
+        <th>Curso</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Vence</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (a of assignments; track a.id) {
+        <tr [class.done]="a.status === 'entregado' || a.status === 'revisado'">
+          <td>
+            <label class="custom-checkbox" (click)="$event.stopPropagation()">
+              <input
+                type="checkbox"
+                [checked]="a.status === 'entregado' || a.status === 'revisado'"
+                (change)="toggleStatus(a)"
+              >
+              <span class="checkmark"></span>
+            </label>
+          </td>
+          <td class="assign-title" (dblclick)="openEdit(a)">{{ a.title }}</td>
+          <td>{{ a.course }}</td>
+          <td>
+            <span class="badge-type" [class.project]="a.type === 'project'">
+              {{ a.type === 'assignment' ? 'Assignment' : 'Proyecto' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge-status" [class.entregado]="a.status === 'entregado'" [class.revisado]="a.status === 'revisado'">
+              {{ a.status }}
+            </span>
+          </td>
+          <td>{{ a.dueDate || '-' }}</td>
+          <td>
+            <button class="assign-edit" (click)="openEdit(a)" title="Editar">
+              <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+            </button>
+            <button class="assign-del" (click)="deleteAssignment(a.id)" title="Eliminar">
+              <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+            </button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (!assignments.length) {
+    <p class="empty">Sin assignments aún</p>
+  }
+
+  <button class="assign-add-btn" (click)="openAdd()">
+    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    Añadir
+  </button>
+</section>
+
+@if (showModal) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon>
+        <span>{{ editAssignment ? 'Editar' : 'Nuevo' }} assignment</span>
+        <button class="modal-close" (click)="closeModal()">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label>
+          Curso
+          <input [(ngModel)]="modalCourse" placeholder="Ej: AWS, Álgebra...">
+        </label>
+        <label>
+          Tipo
+          <select [(ngModel)]="modalType">
+            <option value="assignment">Assignment</option>
+            <option value="project">Proyecto</option>
+          </select>
+        </label>
+        <label>
+          Título
+          <input [(ngModel)]="modalTitle" placeholder="Nombre">
+        </label>
+        <label>
+          Descripción
+          <textarea [(ngModel)]="modalDescription" placeholder="Opcional"></textarea>
+        </label>
+        <label>
+          Fecha
+          <input type="date" [(ngModel)]="modalDueDate">
+        </label>
+        <label>
+          Estado
+          <select [(ngModel)]="modalStatus">
+            <option value="pendiente">Pendiente</option>
+            <option value="entregado">Entregado</option>
+            <option value="revisado">Revisado</option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveModal()" [disabled]="!modalTitle.trim()">
+          {{ editAssignment ? 'Guardar' : 'Añadir' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -11,10 +11,13 @@ import { CalendarView } from './components/calendar-view/calendar-view';
 import { Spotify } from './components/spotify/spotify';
 import { TopicsList } from './components/topics-list/topics-list';
 import { Objectives } from './components/objectives/objectives';
+import { Assignments } from './components/assignments/assignments';
+
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FaIconComponent, Clock, ActionsPanel, TodoWeek, Pomodoro, CalendarView, Spotify, TopicsList, Objectives],
+  imports: [RouterOutlet, FaIconComponent, Clock, ActionsPanel, TodoWeek, Pomodoro, CalendarView, Spotify, TopicsList, Objectives, Assignments],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
