@@ -1,0 +1,93 @@
+<section class="class-notes">
+  <div class="cn-header">
+    <fa-icon [icon]="['fas', 'book-open']"></fa-icon>
+    <span>Notas de clase</span>
+    <span class="cn-count">{{ notes.length }}</span>
+  </div>
+
+  <div class="cn-filter">
+    <select [(ngModel)]="courseFilter">
+      @for (c of courses; track c) {
+        <option [value]="c">
+          {{ c === 'todas' ? 'Todas las materias' : c }}
+        </option>
+      }
+    </select>
+  </div>
+
+  <div class="cn-list">
+    @for (n of filtered; track n.id) {
+      <div class="cn-card" [class.expanded]="expandedId === n.id">
+        <div class="cn-card-main" (click)="toggleExpand(n.id)">
+          <div class="cn-card-top">
+            <span class="cn-badge">{{ n.course }}</span>
+            @if (n.updatedAt) {
+              <span class="cn-updated">{{ n.updatedAt | date: 'dd/MM/yyyy' }}</span>
+            } @else {
+              <span class="cn-updated">{{ n.createdAt | date: 'dd/MM/yyyy' }}</span>
+            }
+          </div>
+          <span class="cn-title">{{ n.title }}</span>
+          <p class="cn-preview">{{ n.content }}</p>
+        </div>
+
+        @if (expandedId === n.id) {
+          <div class="cn-body">
+            <div class="cn-content">{{ n.content }}</div>
+            <div class="cn-actions">
+              <button class="cn-edit" (click)="openEdit(n); $event.stopPropagation()" title="Editar">
+                <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+              </button>
+              <button class="cn-del" (click)="deleteNote(n.id); $event.stopPropagation()" title="Eliminar">
+                <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (!filtered.length) {
+      <p class="cn-empty">Sin notas aún</p>
+    }
+  </div>
+
+  <button class="cn-add-btn" (click)="openAdd()">
+    <fa-icon [icon]="['fas', 'plus']"></fa-icon>
+    Añadir nota
+  </button>
+</section>
+
+@if (showModal) {
+  <div class="modal-backdrop" (click)="closeModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <fa-icon [icon]="['fas', 'book-open']"></fa-icon>
+        <span>{{ editNote ? 'Editar' : 'Nueva' }} nota</span>
+        <button class="modal-close" (click)="closeModal()">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label>
+          Materia
+          <input [(ngModel)]="modalCourse" placeholder="Ej: AWS, Clases de conducir...">
+        </label>
+        <label>
+          Título
+          <input [(ngModel)]="modalTitle" placeholder="Título de la nota">
+        </label>
+        <label>
+          Contenido
+          <textarea [(ngModel)]="modalContent" placeholder="Escribe tu nota aquí..." rows="8"></textarea>
+        </label>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+        <button class="btn-save" (click)="saveModal()" [disabled]="!modalTitle.trim() || !modalCourse.trim()">
+          {{ editNote ? 'Guardar' : 'Añadir' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
