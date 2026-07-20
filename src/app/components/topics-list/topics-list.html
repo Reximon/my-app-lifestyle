@@ -22,6 +22,12 @@
             <span class="topic-desc">{{ t.description }}</span>
           }
         </div>
+        @if (diagramCount(t.id)) {
+          <span class="topic-diagram-count" title="Diagramas vinculados">
+            <fa-icon [icon]="['fas', 'image']"></fa-icon>
+            {{ diagramCount(t.id) }}
+          </span>
+        }
         @if (t.dueDate) {
           <span class="topic-date">{{ t.dueDate }}</span>
         }
@@ -77,6 +83,30 @@
             <option value="completado">Completado</option>
           </select>
         </label>
+
+        @if (editTopic) {
+          <div class="diagrams-section">
+            <div class="diagrams-section-header">
+              <fa-icon [icon]="['fas', 'image']"></fa-icon>
+              Diagramas vinculados
+              <span class="diagrams-count">{{ diagramsForTopic(editTopic.id).length }}</span>
+            </div>
+            @if (diagramsForTopic(editTopic.id).length) {
+              <div class="diagrams-grid">
+                @for (d of diagramsForTopic(editTopic.id); track d.id) {
+                  <div class="diagram-mini">
+                    <img [src]="d.dataUrl" [alt]="d.title">
+                    <button class="diagram-unlink" (click)="unlinkDiagram(d.id)" title="Desvincular">
+                      <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+                    </button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="diagrams-empty">Sin diagramas vinculados</p>
+            }
+          </div>
+        }
       </div>
 
       <div class="modal-footer">

@@ -2,15 +2,29 @@
   <div class="dg-header">
     <fa-icon [icon]="['fas', 'image']"></fa-icon>
     <span>Diagramas</span>
-    <span class="dg-count">{{ diagrams.length }}</span>
+    <span class="dg-count">{{ filtered.length }}</span>
   </div>
 
+  @if (topics.length) {
+    <select class="dg-filter" [(ngModel)]="topicFilter">
+      <option value="todas">Todos los diagramas</option>
+      @for (t of topics; track t.id) {
+        <option [value]="t.id">{{ t.title }}</option>
+      }
+    </select>
+  }
+
   <div class="dg-grid">
-    @for (d of diagrams; track d.id) {
+    @for (d of filtered; track d.id) {
       <div class="dg-card" (click)="openLightbox(d)">
         <img [src]="d.dataUrl" [alt]="d.title" loading="lazy">
         <div class="dg-card-footer">
-          <span class="dg-card-title">{{ d.title }}</span>
+          <div class="dg-card-info">
+            <span class="dg-card-title">{{ d.title }}</span>
+            @if (d.topicId) {
+              <span class="dg-topic-badge">{{ topicName(d.topicId) }}</span>
+            }
+          </div>
           <button class="dg-del" (click)="deleteDiagram(d.id); $event.stopPropagation()" title="Eliminar">
             <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
           </button>
@@ -19,13 +33,21 @@
     }
   </div>
 
-  @if (!diagrams.length) {
+  @if (!filtered.length) {
     <p class="dg-empty">Sin diagramas aún</p>
   }
 
   @if (showTitleInput) {
     <div class="dg-upload-form">
       <input [(ngModel)]="pendingTitle" placeholder="Nombre del diagrama">
+      @if (topics.length) {
+        <select [(ngModel)]="pendingTopicId">
+          <option value="">Sin topic relacionado</option>
+          @for (t of topics; track t.id) {
+            <option [value]="t.id">{{ t.title }}</option>
+          }
+        </select>
+      }
       <div class="dg-upload-actions">
         <button class="btn-cancel-upload" (click)="cancelUpload()">Cancelar</button>
         <button class="btn-confirm-upload" (click)="confirmUpload()">Subir</button>
@@ -45,6 +67,9 @@
     <div class="lb-modal" (click)="$event.stopPropagation()">
       <div class="lb-header">
         <span class="lb-title">{{ lightbox.title }}</span>
+        @if (lightbox.topicId) {
+          <span class="lb-topic">{{ topicName(lightbox.topicId) }}</span>
+        }
         <button class="lb-close" (click)="closeLightbox()">
           <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
         </button>

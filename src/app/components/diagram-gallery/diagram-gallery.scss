@@ -4,6 +4,19 @@
   padding: 14px;
 }
 
+.dg-filter {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 0.72rem;
+  outline: none;
+  cursor: pointer;
+}
+
 .dg-header {
   display: flex;
   align-items: center;
@@ -63,13 +76,29 @@
   gap: 4px;
 }
 
-.dg-card-title {
+.dg-card-info {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dg-card-title {
   font-size: 0.65rem;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.dg-topic-badge {
+  font-size: 0.55rem;
+  color: var(--accent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.7;
 }
 
 .dg-del {
@@ -102,7 +131,7 @@
   flex-direction: column;
   gap: 8px;
 
-  input {
+  input, select {
     width: 100%;
     padding: 8px 10px;
     border: none;
@@ -116,6 +145,10 @@
     &::placeholder {
       color: var(--text-secondary);
     }
+  }
+
+  select {
+    cursor: pointer;
   }
 }
 
@@ -207,6 +240,14 @@
   font-size: 0.85rem;
   font-weight: 600;
   color: var(--accent);
+}
+
+.lb-topic {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: 2px 8px;
+  border-radius: 6px;
 }
 
 .lb-close {

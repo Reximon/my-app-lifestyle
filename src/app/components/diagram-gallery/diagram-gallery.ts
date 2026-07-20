@@ -2,7 +2,9 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DiagramService } from '../../services/diagram.service';
+import { TaskService } from '../../services/task.service';
 import { Diagram } from '../../../models/diagram.model';
+import { Task } from '../../models/task.model';
 
 @Component({
   selector: 'app-diagram-gallery',
@@ -12,13 +14,17 @@ import { Diagram } from '../../../models/diagram.model';
 })
 export class DiagramGallery {
   public diagrams: Diagram[] = [];
+  public topics: Task[] = [];
   public lightbox: Diagram | null = null;
   public showTitleInput = false;
   public pendingFile: File | null = null;
   public pendingTitle = '';
+  public pendingTopicId = '';
+  public topicFilter = 'todas';
 
   constructor(
     private diagramService: DiagramService,
+    private taskService: TaskService,
     private cdr: ChangeDetectorRef,
   ) {
     this.load();
@@ -26,10 +32,26 @@ export class DiagramGallery {
       this.load();
       this.cdr.markForCheck();
     });
+    this.taskService.tasks$.subscribe(() => {
+      this.topics = this.taskService.getTasks().filter(t => t.type === 'topic');
+      this.cdr.markForCheck();
+    });
   }
 
   private load(): void {
     this.diagrams = this.diagramService.getDiagrams();
+    this.topics = this.taskService.getTasks().filter(t => t.type === 'topic');
+  }
+
+  get filtered(): Diagram[] {
+    return this.topicFilter === 'todas'
+      ? this.diagrams
+      : this.diagrams.filter(d => d.topicId === this.topicFilter);
+  }
+
+  topicName(id?: string): string {
+    if (!id) return '';
+    return this.topics.find(t => t.id === id)?.title || '—';
   }
 
   onFileSelected(event: Event): void {
@@ -39,6 +61,7 @@ export class DiagramGallery {
 
     this.pendingFile = file;
     this.pendingTitle = file.name.replace(/\.[^/.]+$/, '');
+    this.pendingTopicId = '';
     this.showTitleInput = true;
     input.value = '';
   }
@@ -55,6 +78,7 @@ export class DiagramGallery {
           id: Date.now().toString(),
           title: this.pendingTitle.trim() || 'Sin título',
           dataUrl: resized,
+          topicId: this.pendingTopicId || undefined,
           createdAt: new Date().toISOString(),
         };
         this.diagramService.addDiagram(diagram);
@@ -68,6 +92,7 @@ export class DiagramGallery {
     this.showTitleInput = false;
     this.pendingFile = null;
     this.pendingTitle = '';
+    this.pendingTopicId = '';
   }
 
   private resizeImage(dataUrl: string, maxSize: number, cb: (resized: string) => void): void {

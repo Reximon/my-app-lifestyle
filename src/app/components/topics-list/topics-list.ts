@@ -2,7 +2,9 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { TaskService } from '../../services/task.service';
+import { DiagramService } from '../../services/diagram.service';
 import { Task } from '../../models/task.model';
+import { Diagram } from '../../../models/diagram.model';
 
 @Component({
   selector: 'app-topics-list',
@@ -12,6 +14,7 @@ import { Task } from '../../models/task.model';
 })
 export class TopicsList {
   public topics: Task[] = [];
+  public diagrams: Diagram[] = [];
   public showModal = false;
   public editTopic: Task | null = null;
   public modalTitle = '';
@@ -21,6 +24,7 @@ export class TopicsList {
 
   constructor(
     private taskService: TaskService,
+    private diagramService: DiagramService,
     private cdr: ChangeDetectorRef,
   ) {
     this.loadTopics();
@@ -28,10 +32,27 @@ export class TopicsList {
       this.loadTopics();
       this.cdr.markForCheck();
     });
+    this.diagramService.diagrams$.subscribe(() => {
+      this.diagrams = this.diagramService.getDiagrams();
+      this.cdr.markForCheck();
+    });
   }
 
   private loadTopics(): void {
     this.topics = this.taskService.getTasks().filter(t => t.type === 'topic');
+    this.diagrams = this.diagramService.getDiagrams();
+  }
+
+  diagramsForTopic(topicId: string): Diagram[] {
+    return this.diagrams.filter(d => d.topicId === topicId);
+  }
+
+  diagramCount(topicId: string): number {
+    return this.diagrams.filter(d => d.topicId === topicId).length;
+  }
+
+  unlinkDiagram(diagramId: string): void {
+    this.diagramService.updateDiagram(diagramId, { topicId: undefined });
   }
 
   public openAdd(): void {

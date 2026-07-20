@@ -32,6 +32,14 @@ export class DiagramService {
     this.save();
   }
 
+  updateDiagram(id: string, changes: Partial<Diagram>): void {
+    const idx = this.diagrams.findIndex(d => d.id === id);
+    if (idx !== -1) {
+      this.diagrams[idx] = { ...this.diagrams[idx], ...changes };
+      this.save();
+    }
+  }
+
   deleteDiagram(id: string): void {
     this.diagrams = this.diagrams.filter(d => d.id !== id);
     this.save();
