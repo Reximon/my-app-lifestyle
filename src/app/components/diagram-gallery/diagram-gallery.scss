@@ -94,6 +94,8 @@
 
 .dg-topic-badge {
   display: inline-block;
+  width: auto;
+  align-self: flex-start;
   font-size: 0.55rem;
   font-weight: 600;
   color: #fff;
