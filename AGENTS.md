@@ -66,8 +66,9 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 - Botón eliminar (hover reveal) + botón lápiz hover
 - Doble click en título o click en lápiz → modal (título, descripción, fecha, estado)
 - Botón "Añadir topic" abre modal para crear
-- Contador de topics en el header
-- Se sincera con `TaskService.tasks$` en tiempo real
+- **Color picker**: paleta de 12 colores en el modal de crear/editar. Círculo de color en la lista.
+- **Diagramas vinculados**: muestra contador de diagramas (`faImage N`) en la lista y miniaturas con botón desvincular en el modal de edición
+- Se sincera con `TaskService.tasks$` + `DiagramService.diagrams$` en tiempo real
 
 ### Objectives (`components/objectives/`)
 - Sección en main-content con 3 tabs: Diario (sun), Semanal (calendar-week), Semestral (graduation-cap)
@@ -96,7 +97,8 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 ### DiagramGallery (`components/diagram-gallery/`)
 - Cuadrícula de thumbnails (auto-fill, min 140px)
 - Subida de imágenes → redimensiona a 800px max via canvas → guarda como base64 en localStorage
-- Lightbox modal a tamaño completo con backdrop-filter blur
+- **Vinculación con topics**: selector de topic al subir, filtro por topic, badge con dot de color en cada card
+- Lightbox modal a tamaño completo con backdrop-filter blur y nombre del topic
 - Nombre editable antes de subir
 - Botón eliminar por hover en cada thumbnail
 
@@ -129,7 +131,7 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 
 ### DiagramService (`services/diagram.service.ts`)
 - localStorage (`academic-os-diagrams`), BehaviorSubject (`diagrams$`)
-- CRUD: `getDiagrams()`, `addDiagram()`, `deleteDiagram()`
+- CRUD: `getDiagrams()`, `addDiagram()`, `updateDiagram()`, `deleteDiagram()`
 
 ### GoogleCalendar (`services/google-calendar.ts`)
 - GIS `google.accounts.oauth2`, scopes: calendar + userinfo.email
@@ -147,6 +149,7 @@ interface Task {
   title: string;
   description?: string;
   status: 'pendiente' | 'en progreso' | 'completado';
+  color?: string;
   dueDate?: string;
   createdAt: string;
   googleEventId?: string;
@@ -198,6 +201,7 @@ interface Diagram {
   id: string;
   title: string;
   dataUrl: string;
+  topicId?: string;
   createdAt: string;
 }
 ```
@@ -220,10 +224,13 @@ interface Diagram {
 7. ~~Objetivos (diarios, semanales, semestres)~~ ✔️
 8. ~~Calendario con Google Calendar API~~ ✔️
 9. ~~Pomodoro~~ ✔️
-10. Notas de clase (AWS, carnet de conducir, etc.)
+10. ~~Notas de clase (AWS, carnet de conducir, etc.)~~ ✔️
 11. ~~Lista de Topics (sidebar derecha)~~ ✔️
 
 ## Last Commits
+- `a7e8ca7 feat: color picker para topics con paleta de 12 colores + dot en lista y galería`
+- `7e75391 feat: vincular diagramas con topics - selector en upload, filtro en galería, miniaturas en modal de topic`
+- `d743320 fix: circular infinite loop en TaskService.getTasks() al emitir next()`
 - `8033a49 feat: DiagramGallery con upload, grid thumbnails y lightbox`
 - `4499a22 feat: ClassNotes con diseño de click en tarjeta, filtro por materia, modal crear/editar`
 - `d28de52 fix: reordenar Assignments debajo de Objetivos con header`
