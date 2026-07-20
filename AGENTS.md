@@ -86,6 +86,20 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 - Modal con campos: curso, tipo, título, descripción, fecha, estado
 - Persistencia en localStorage via `AssignmentService`
 
+### ClassNotes (`components/class-notes/`)
+- Notas de clase en main-content
+- **Tarjetas** con preview de 2 líneas, click para expandir contenido completo
+- Filtro por materia (select)
+- Modal para crear/editar: materia, título, textarea grande
+- Botón editar/eliminar visibles al expandir
+
+### DiagramGallery (`components/diagram-gallery/`)
+- Cuadrícula de thumbnails (auto-fill, min 140px)
+- Subida de imágenes → redimensiona a 800px max via canvas → guarda como base64 en localStorage
+- Lightbox modal a tamaño completo con backdrop-filter blur
+- Nombre editable antes de subir
+- Botón eliminar por hover en cada thumbnail
+
 ### Spotify (`components/spotify/`)
 - Biblioteca multi-playlist vía **embeds de Spotify** (no requiere API OAuth ni Premium)
 - Playlists guardadas en localStorage como array `{ id, label }`
@@ -108,6 +122,14 @@ Git remote: `https://github.com/Reximon/my-app-lifestyle.git`
 ### AssignmentService (`services/assignment.service.ts`)
 - localStorage (`academic-os-assignments`), BehaviorSubject (`assignments$`)
 - CRUD: `getAssignments()`, `addAssignment()`, `updateAssignment()`, `deleteAssignment()`
+
+### ClassNoteService (`services/class-note.service.ts`)
+- localStorage (`academic-os-class-notes`), BehaviorSubject (`classNotes$`)
+- CRUD: `getNotes()`, `addNote()`, `updateNote()`, `deleteNote()`
+
+### DiagramService (`services/diagram.service.ts`)
+- localStorage (`academic-os-diagrams`), BehaviorSubject (`diagrams$`)
+- CRUD: `getDiagrams()`, `addDiagram()`, `deleteDiagram()`
 
 ### GoogleCalendar (`services/google-calendar.ts`)
 - GIS `google.accounts.oauth2`, scopes: calendar + userinfo.email
@@ -158,6 +180,28 @@ interface Assignment {
 }
 ```
 
+### ClassNote (`models/class-note.model.ts`)
+```ts
+interface ClassNote {
+  id: string;
+  course: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt?: string;
+}
+```
+
+### Diagram (`models/diagram.model.ts`)
+```ts
+interface Diagram {
+  id: string;
+  title: string;
+  dataUrl: string;
+  createdAt: string;
+}
+```
+
 ## Assets
 - **Banner**: `src/img/bg.jpg`, 220px height, object-fit cover, object-position 0% 30%
 - `public/favicon.ico` removed (dynamic favicon via clock canvas)
@@ -171,7 +215,7 @@ interface Assignment {
 2. ~~Actions (crear tareas/clases/topics/notas/assignments)~~ ✔️
 3. ~~Spotify / YouTube~~ ✔️
 4. ~~Tareas de la semana (todo)~~ ✔️
-5. Galería de diagramas subidos
+5. ~~Galería de diagramas subidos~~ ✔️
 6. ~~Assignments / Proyectos semanales~~ ✔️
 7. ~~Objetivos (diarios, semanales, semestres)~~ ✔️
 8. ~~Calendario con Google Calendar API~~ ✔️
@@ -180,6 +224,8 @@ interface Assignment {
 11. ~~Lista de Topics (sidebar derecha)~~ ✔️
 
 ## Last Commits
+- `8033a49 feat: DiagramGallery con upload, grid thumbnails y lightbox`
+- `4499a22 feat: ClassNotes con diseño de click en tarjeta, filtro por materia, modal crear/editar`
 - `d28de52 fix: reordenar Assignments debajo de Objetivos con header`
 - `81f11af fix: Assignments component adaptado correctamente al modelo`
 - `b3ac6a0 feat: edición inline con lápiz hover y doble click en Tareas, Objetivos, Topics`
