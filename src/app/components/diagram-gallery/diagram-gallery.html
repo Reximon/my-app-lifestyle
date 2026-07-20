@@ -22,10 +22,7 @@
           <div class="dg-card-info">
             <span class="dg-card-title">{{ d.title }}</span>
             @if (d.topicId) {
-              <span class="dg-topic-badge">
-                @if (topicColor(d.topicId)) {
-                  <span class="dg-topic-color" [style.background]="topicColor(d.topicId)"></span>
-                }
+              <span class="dg-topic-badge" [style.background]="topicColor(d.topicId) || 'var(--bg-secondary)'">
                 {{ topicName(d.topicId) }}
               </span>
             }
@@ -73,7 +70,9 @@
       <div class="lb-header">
         <span class="lb-title">{{ lightbox.title }}</span>
         @if (lightbox.topicId) {
-          <span class="lb-topic">{{ topicName(lightbox.topicId) }}</span>
+          <span class="lb-topic" [style.background]="topicColor(lightbox.topicId) || 'var(--bg-secondary)'">
+            {{ topicName(lightbox.topicId) }}
+          </span>
         }
         <button class="lb-close" (click)="closeLightbox()">
           <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
