@@ -15,6 +15,11 @@
   <main class="main-content">
     <!-- actions, todo, diagram-gallery, assignments, objectives, class-notes -->
     <div class="title-section-block">
+      <fa-icon [icon]="['fas', 'image']"> </fa-icon>
+      Diagramas
+    </div>
+    <app-diagram-gallery></app-diagram-gallery>
+    <div class="title-section-block">
       <fa-icon [icon]="['fas', 'list-check']"> </fa-icon>
       Tareas de la semana
     </div>
@@ -34,11 +39,6 @@
       Notas de clase
     </div>
     <app-class-notes></app-class-notes>
-    <div class="title-section-block">
-      <fa-icon [icon]="['fas', 'image']"> </fa-icon>
-      Diagramas
-    </div>
-    <app-diagram-gallery></app-diagram-gallery>
     <div class="title-section-block">
       <fa-icon [icon]="['fas', 'calendar']"> </fa-icon>
       Calendario

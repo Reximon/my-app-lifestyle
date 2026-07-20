@@ -13,15 +13,20 @@ export class TaskService {
     public tasks$ = this.tasksSubject.asObservable();
 
     constructor() {
-      this.getTasks();
+      this.loadFromStorage();
+    }
+
+    private loadFromStorage(): void {
+      if (typeof localStorage === 'undefined') return;
+      const data = localStorage.getItem(this.storageKey);
+      const tasks = data ? JSON.parse(data) : [];
+      this.tasksSubject.next(tasks);
     }
 
     public getTasks(): Task[] {
       if (typeof localStorage === 'undefined') return [];
       const data = localStorage.getItem(this.storageKey);
-      const tasks = data ? JSON.parse(data) : [];
-      this.tasksSubject.next(tasks);
-      return tasks;
+      return data ? JSON.parse(data) : [];
     }
 
     public saveTasks(tasks: Task[]): void {
