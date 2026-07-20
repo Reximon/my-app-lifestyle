@@ -54,6 +54,11 @@ export class DiagramGallery {
     return this.topics.find(t => t.id === id)?.title || '—';
   }
 
+  topicColor(id?: string): string {
+    if (!id) return '';
+    return this.topics.find(t => t.id === id)?.color || '';
+  }
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const file = input?.files?.[0];

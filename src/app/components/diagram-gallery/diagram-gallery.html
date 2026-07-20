@@ -22,7 +22,12 @@
           <div class="dg-card-info">
             <span class="dg-card-title">{{ d.title }}</span>
             @if (d.topicId) {
-              <span class="dg-topic-badge">{{ topicName(d.topicId) }}</span>
+              <span class="dg-topic-badge">
+                @if (topicColor(d.topicId)) {
+                  <span class="dg-topic-color" [style.background]="topicColor(d.topicId)"></span>
+                }
+                {{ topicName(d.topicId) }}
+              </span>
             }
           </div>
           <button class="dg-del" (click)="deleteDiagram(d.id); $event.stopPropagation()" title="Eliminar">

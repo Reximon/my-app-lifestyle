@@ -4,6 +4,7 @@ export interface Task {
   title: string;
   description?: string;
   status: 'pendiente' | 'en progreso' | 'completado';
+  color?: string;
   dueDate?: string;
   createdAt: string;
   googleEventId?: string;

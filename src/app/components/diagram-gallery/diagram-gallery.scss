@@ -93,12 +93,22 @@
 }
 
 .dg-topic-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   font-size: 0.55rem;
   color: var(--accent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   opacity: 0.7;
+}
+
+.dg-topic-color {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .dg-del {

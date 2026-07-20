@@ -16,6 +16,9 @@
           >
           <span class="checkmark"></span>
         </label>
+        @if (t.color) {
+          <span class="topic-color-dot" [style.background]="t.color"></span>
+        }
         <div class="topic-info" (dblclick)="openEdit(t)">
           <span class="topic-title">{{ t.title }}</span>
           @if (t.description) {
@@ -83,6 +86,27 @@
             <option value="completado">Completado</option>
           </select>
         </label>
+
+        <div class="color-section">
+          <span class="color-label">Color</span>
+          <div class="color-palette">
+            <button
+              class="color-swatch"
+              [class.active]="!modalColor"
+              (click)="modalColor = ''"
+              title="Ninguno"
+            ></button>
+            @for (c of colors; track c) {
+              <button
+                class="color-swatch"
+                [style.background]="c"
+                [class.active]="modalColor === c"
+                (click)="modalColor = c"
+                [title]="c"
+              ></button>
+            }
+          </div>
+        </div>
 
         @if (editTopic) {
           <div class="diagrams-section">
