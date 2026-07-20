@@ -1,0 +1,55 @@
+<section class="diagram-gallery">
+  <div class="dg-header">
+    <fa-icon [icon]="['fas', 'image']"></fa-icon>
+    <span>Diagramas</span>
+    <span class="dg-count">{{ diagrams.length }}</span>
+  </div>
+
+  <div class="dg-grid">
+    @for (d of diagrams; track d.id) {
+      <div class="dg-card" (click)="openLightbox(d)">
+        <img [src]="d.dataUrl" [alt]="d.title" loading="lazy">
+        <div class="dg-card-footer">
+          <span class="dg-card-title">{{ d.title }}</span>
+          <button class="dg-del" (click)="deleteDiagram(d.id); $event.stopPropagation()" title="Eliminar">
+            <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (!diagrams.length) {
+    <p class="dg-empty">Sin diagramas aún</p>
+  }
+
+  @if (showTitleInput) {
+    <div class="dg-upload-form">
+      <input [(ngModel)]="pendingTitle" placeholder="Nombre del diagrama">
+      <div class="dg-upload-actions">
+        <button class="btn-cancel-upload" (click)="cancelUpload()">Cancelar</button>
+        <button class="btn-confirm-upload" (click)="confirmUpload()">Subir</button>
+      </div>
+    </div>
+  } @else {
+    <label class="dg-upload-btn">
+      <fa-icon [icon]="['fas', 'upload']"></fa-icon>
+      Subir diagrama
+      <input type="file" accept="image/*" (change)="onFileSelected($event)" hidden>
+    </label>
+  }
+</section>
+
+@if (lightbox) {
+  <div class="lb-backdrop" (click)="closeLightbox()">
+    <div class="lb-modal" (click)="$event.stopPropagation()">
+      <div class="lb-header">
+        <span class="lb-title">{{ lightbox.title }}</span>
+        <button class="lb-close" (click)="closeLightbox()">
+          <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+        </button>
+      </div>
+      <img [src]="lightbox.dataUrl" [alt]="lightbox.title" class="lb-img">
+    </div>
+  </div>
+}
