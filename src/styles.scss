@@ -1,17 +1,20 @@
 :root {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #141414;
-  --bg-card: #1a1a1a;
-  --bg-card-hover: #222222;
-  --border: #333333;
-  --text-primary: #f0f0f0;
-  --text-secondary: #999999;
-  --accent: #ffffff;
-  --accent-glow: rgba(255, 255, 255, 0.15);
-  --green: #cccccc;
-  --blue: #aaaaaa;
-  --orange: #999999;
-  --red: #888888;
+  --bg-primary:    #08080f;
+  --bg-secondary:  #0e0e1a;
+  --bg-card:       #161625;
+  --bg-elevated:   #1a1a30;
+  --bg-hover:      #1e1e30;
+  --border:        #1a1a2e;
+  --border-strong: #2a2a44;
+  --text-primary:  #f0f0f0;
+  --text-secondary:#9098a8;
+  --text-tertiary: #555a6a;
+  --accent:        #ffffff;
+  --accent-glow:   rgba(255, 255, 255, 0.06);
+  --green:         #cccccc;
+  --blue:          #aaaaaa;
+  --orange:        #999999;
+  --red:           #888888;
 }
 
 * {
@@ -25,6 +28,7 @@ body {
   background: radial-gradient(ellipse at 50% 0%, #121225 0%, var(--bg-primary) 70%);
   background-attachment: fixed;
   color: var(--text-primary);
+  min-height: 100vh;
 }
 
 section, .modal {
@@ -52,4 +56,9 @@ section, .modal {
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 3px;
+}
+
+@keyframes mosquito-pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
 }

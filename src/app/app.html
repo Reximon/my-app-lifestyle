@@ -1,5 +1,33 @@
-<img class="banner-img" src="img/bg.jpg" >
-<header class="title-h1"> <fa-icon [icon]="['fas', 'mosquito']"></fa-icon> Rexi App</header>
+<div class="banner">
+  <img class="banner-bg" src="img/bg.jpg" alt="REXI OS">
+  <div class="banner-overlay"></div>
+  <div class="banner-content">
+    <div class="banner-left">
+      <fa-icon [icon]="['fas', 'mosquito']" class="mosquito"></fa-icon>
+      <div class="banner-brand">
+        <span class="brand-name">REXI OS</span>
+        <span class="brand-sub">puesto de mando académico</span>
+      </div>
+    </div>
+    <div class="banner-right">
+      <div class="banner-info">
+        <span class="greeting">{{ greeting() }}, <strong>Rexi</strong></span>
+        <span class="current-date">{{ dateStr() }}</span>
+      </div>
+      <div class="banner-stats">
+        <div class="stat-card">
+          <span class="stat-value">{{ pendingCount() }}</span>
+          <span class="stat-label">pendientes</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value">{{ objDone() }}/{{ objTotal() }}</span>
+          <span class="stat-label">objetivos hoy</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <main class="main">
   <div class="app-layout">
   <aside class="sidebar-left">
@@ -13,32 +41,36 @@
   </aside>
 
   <main class="main-content">
-    <!-- actions, todo, diagram-gallery, assignments, objectives, class-notes -->
     <div class="title-section-block">
       <fa-icon [icon]="['fas', 'image']"> </fa-icon>
       Diagramas
     </div>
     <app-diagram-gallery></app-diagram-gallery>
+    <hr class="section-divider">
     <div class="title-section-block">
       <fa-icon [icon]="['fas', 'list-check']"> </fa-icon>
       Tareas de la semana
     </div>
     <app-todo-week></app-todo-week>
+    <hr class="section-divider">
     <div class="title-section-block">
       <fa-icon [icon]="['fas', 'bullseye']"> </fa-icon>
       Objetivos
     </div>
-        <app-objectives></app-objectives>
+    <app-objectives></app-objectives>
+    <hr class="section-divider">
     <div class="title-section-block">
       <fa-icon [icon]="['fas', 'check']"> </fa-icon>
       Proyectos
     </div>
     <app-assignments></app-assignments>
+    <hr class="section-divider">
     <div class="title-section-block">
       <fa-icon [icon]="['fas', 'book-open']"> </fa-icon>
       Notas de clase
     </div>
     <app-class-notes></app-class-notes>
+    <hr class="section-divider">
     <div class="title-section-block">
       <fa-icon [icon]="['fas', 'calendar']"> </fa-icon>
       Calendario
