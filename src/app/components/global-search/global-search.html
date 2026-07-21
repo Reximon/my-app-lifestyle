@@ -1,0 +1,46 @@
+<div class="gs-wrapper">
+  <div class="gs-input-wrap">
+    <fa-icon class="gs-icon" [icon]="['fas', 'magnifying-glass']"></fa-icon>
+    <input
+      class="gs-input"
+      [(ngModel)]="query"
+      (input)="onInput()"
+      (focus)="query && search()"
+      placeholder="Buscar tareas, objetivos, notas..."
+    >
+    @if (query) {
+      <button class="gs-clear" (click)="close()">
+        <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
+      </button>
+    }
+  </div>
+
+  @if (showResults) {
+    <div class="gs-dropdown">
+      @if (!results.length) {
+        <p class="gs-empty">Sin resultados</p>
+      }
+
+      @for (g of grouped; track g.key) {
+        <div class="gs-group">
+          <div class="gs-group-header">
+            <fa-icon [icon]="g.icon"></fa-icon>
+            {{ g.label }}
+            <span class="gs-count">{{ g.items.length }}</span>
+          </div>
+          @for (item of g.items; track item.id) {
+            <div class="gs-item">
+              <fa-icon [icon]="item.icon" class="gs-item-icon"></fa-icon>
+              <div class="gs-item-info">
+                <span class="gs-item-title">{{ item.title }}</span>
+                @if (item.description) {
+                  <span class="gs-item-desc">{{ item.description }}</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

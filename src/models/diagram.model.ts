@@ -3,5 +3,6 @@ export interface Diagram {
   title: string;
   dataUrl: string;
   topicId?: string;
+  sortOrder: number;
   createdAt: string;
 }

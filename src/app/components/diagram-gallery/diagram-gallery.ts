@@ -84,6 +84,7 @@ export class DiagramGallery {
           title: this.pendingTitle.trim() || 'Sin título',
           dataUrl: resized,
           topicId: this.pendingTopicId || undefined,
+          sortOrder: 0,
           createdAt: new Date().toISOString(),
         };
         this.diagramService.addDiagram(diagram);
@@ -130,5 +131,13 @@ export class DiagramGallery {
   deleteDiagram(id: string): void {
     this.diagramService.deleteDiagram(id);
     if (this.lightbox?.id === id) this.lightbox = null;
+  }
+
+  moveUp(id: string): void {
+    this.diagramService.moveUp(id);
+  }
+
+  moveDown(id: string): void {
+    this.diagramService.moveDown(id);
   }
 }

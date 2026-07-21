@@ -27,6 +27,14 @@
               </span>
             }
           </div>
+          <div class="dg-reorder">
+            <button (click)="moveUp(d.id); $event.stopPropagation()" title="Mover arriba">
+              <fa-icon [icon]="['fas', 'arrow-up']"></fa-icon>
+            </button>
+            <button (click)="moveDown(d.id); $event.stopPropagation()" title="Mover abajo">
+              <fa-icon [icon]="['fas', 'arrow-down']"></fa-icon>
+            </button>
+          </div>
           <button class="dg-del" (click)="deleteDiagram(d.id); $event.stopPropagation()" title="Eliminar">
             <fa-icon [icon]="['fas', 'xmark']"></fa-icon>
           </button>

@@ -121,6 +121,34 @@
   }
 }
 
+.dg-reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  opacity: 0;
+  transition: opacity 0.15s;
+
+  .dg-card:hover & {
+    opacity: 1;
+  }
+
+  button {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0 3px;
+    border-radius: 3px;
+    font-size: 0.45rem;
+    line-height: 1;
+    transition: color 0.15s;
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+}
+
 .dg-empty {
   font-size: 0.7rem;
   color: var(--text-secondary);
