@@ -1,1 +1,71 @@
-<p>dashboard works!</p>
+<section class="dashboard">
+  <div class="title-section-block">
+    <fa-icon [icon]="['fas', 'chart-simple']"></fa-icon>
+    Resumen
+  </div>
+  <div class="dash-stats">
+    <div class="stat-card">
+      <span class="stat-value">{{ pendingCount }}</span>
+      <span class="stat-label">pendientes</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ completedCount }}</span>
+      <span class="stat-label">completadas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ notesCount }}</span>
+      <span class="stat-label">notas</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ diagramsCount }}</span>
+      <span class="stat-label">diagramas</span>
+    </div>
+  </div>
+
+  <div class="title-section-block">
+    <fa-icon [icon]="['fas', 'bullseye']"></fa-icon>
+    Objetivos diarios
+  </div>
+  <div class="dash-progress">
+    <div class="progress-bar">
+      <div class="progress-fill" [style.width.%]="dailyTotal ? (dailyDone / dailyTotal) * 100 : 0"></div>
+    </div>
+    <span class="progress-text">{{ dailyDone }} / {{ dailyTotal }}</span>
+  </div>
+
+  <div class="title-section-block">
+    <fa-icon [icon]="['fas', 'clipboard-list']"></fa-icon>
+    Proyectos
+  </div>
+  <div class="dash-stats">
+    <div class="stat-card">
+      <span class="stat-value">{{ assignmentsPending }}</span>
+      <span class="stat-label">pendientes</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ assignmentsDelivered }}</span>
+      <span class="stat-label">entregados</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-value">{{ assignmentsReviewed }}</span>
+      <span class="stat-label">revisados</span>
+    </div>
+  </div>
+
+  <div class="title-section-block">
+    <fa-icon [icon]="['fas', 'calendar']"></fa-icon>
+    Próximos vencimientos
+  </div>
+  <div class="dash-deadlines">
+    @if (!upcomingDeadlines.length) {
+      <p class="dash-empty">Sin vencimientos próximos</p>
+    }
+    @for (d of upcomingDeadlines; track d.title) {
+      <div class="deadline-row">
+        <span class="deadline-source">{{ d.source }}</span>
+        <span class="deadline-title">{{ d.title }}</span>
+        <span class="deadline-date">{{ d.dueDate }}</span>
+      </div>
+    }
+  </div>
+</section>

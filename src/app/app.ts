@@ -1,7 +1,7 @@
 import { Component, signal, OnInit, OnDestroy, inject, ChangeDetectorRef } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FaIconComponent, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCheck, faPlus, faPlay, faPause, faRotate, faChevronLeft, faChevronRight, faTrash, faSave, faTimes, faFilter, faCalendar, faClock, faUpload, faListCheck, faMosquito, faBook, faChalkboard, faClipboardList, faFileLines, faCheckDouble, faUser, faHeadphones, faMusic, faArrowRightToBracket, faRightFromBracket, faBullseye, faSun, faCalendarWeek, faGraduationCap, faPen, faBookOpen, faImage, faMagnifyingGlass, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faPlus, faPlay, faPause, faRotate, faChevronLeft, faChevronRight, faTrash, faSave, faTimes, faFilter, faCalendar, faClock, faUpload, faListCheck, faMosquito, faBook, faChalkboard, faClipboardList, faFileLines, faCheckDouble, faUser, faHeadphones, faMusic, faArrowRightToBracket, faRightFromBracket, faBullseye, faSun, faCalendarWeek, faGraduationCap, faPen, faBookOpen, faImage, faMagnifyingGlass, faArrowUp, faArrowDown, faChartSimple } from '@fortawesome/free-solid-svg-icons';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import { Subject, takeUntil } from 'rxjs';
 import { Clock } from "./components/clock/clock";
@@ -39,7 +39,7 @@ export class App implements OnInit, OnDestroy {
   private objectiveService = inject(ObjectiveService);
 
   constructor(library: FaIconLibrary) {
-    library.addIcons(faCheck, faPlus, faPlay, faPause, faRotate, faChevronLeft, faChevronRight, faTrash, faSave, faTimes, faFilter, faCalendar, faClock, faUpload, faListCheck, faMosquito, faBook, faChalkboard, faClipboardList, faFileLines, faCheckDouble, faUser, faHeadphones, faMusic, faArrowRightToBracket, faRightFromBracket, faBullseye, faSun, faCalendarWeek, faGraduationCap, faPen, faBookOpen, faImage, faMagnifyingGlass, faArrowUp, faArrowDown, faSpotify);
+    library.addIcons(faCheck, faPlus, faPlay, faPause, faRotate, faChevronLeft, faChevronRight, faTrash, faSave, faTimes, faFilter, faCalendar, faClock, faUpload, faListCheck, faMosquito, faBook, faChalkboard, faClipboardList, faFileLines, faCheckDouble, faUser, faHeadphones, faMusic, faArrowRightToBracket, faRightFromBracket, faBullseye, faSun, faCalendarWeek, faGraduationCap, faPen, faBookOpen, faImage, faMagnifyingGlass, faArrowUp, faArrowDown, faChartSimple, faSpotify);
   }
 
   ngOnInit() {
