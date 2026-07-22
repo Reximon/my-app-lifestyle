@@ -9,6 +9,34 @@
   padding: 0 2px;
 }
 
+.stat-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  text-align: center;
+  min-width: 64px;
+}
+
+.stat-value {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
 .dash-progress {
   display: flex;
   align-items: center;

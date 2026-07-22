@@ -1,5 +1,5 @@
 import { DecimalPipe } from '@angular/common';
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
@@ -8,22 +8,23 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
   templateUrl: './pomodoro.html',
   styleUrl: './pomodoro.scss',
 })
-export class Pomodoro {
-
-  constructor(private cdr: ChangeDetectorRef) {}
-
+export class Pomodoro implements OnDestroy {
   public minutes: number = 25;
   public seconds: number = 0;
   public isRunning: boolean = false;
   public isBreak: boolean = false;
-  public intervalId: any;
+  private intervalId: any;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnDestroy(): void {
+    clearInterval(this.intervalId);
+  }
 
   public start() {
-
     this.intervalId = setInterval(() => {
       if (this.seconds === 0) {
         if (this.minutes === 0) {
-          //Se acabó el tiempo
           this.isBreak = !this.isBreak;
           this.minutes = this.isBreak ? 5 : 25;
           this.seconds = 0;
@@ -32,6 +33,7 @@ export class Pomodoro {
           if ('Notification' in window) {
             new Notification(this.isBreak ? 'Descanso terminado' : 'Tiempo de trabajo terminado');
           }
+          this.cdr.markForCheck();
           return;
         }
         this.minutes--;
@@ -39,9 +41,8 @@ export class Pomodoro {
       } else {
         this.seconds--;
       }
-      this.cdr.detectChanges();
+      this.cdr.markForCheck();
     }, 1000);
-
   }
 
   public pause() {
@@ -50,18 +51,13 @@ export class Pomodoro {
   }
 
   public reset() {
-
     clearInterval(this.intervalId);
     this.minutes = 25;
     this.seconds = 0;
     this.isRunning = false;
     this.isBreak = false;
-
   }
 
-  /**
-   * toggle
-   */
   public toggle() {
     if (this.isRunning) {
       this.pause();
@@ -70,5 +66,4 @@ export class Pomodoro {
       this.start();
     }
   }
-
 }
