@@ -18,10 +18,11 @@ import { DiagramGallery } from './components/diagram-gallery/diagram-gallery';
 import { GlobalSearch } from './components/global-search/global-search';
 import { TaskService } from './services/task.service';
 import { ObjectiveService } from './services/objective.service';
+import { Dashboard } from './components/dashboard/dashboard';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, FaIconComponent, Clock, ActionsPanel, TodoWeek, Pomodoro, CalendarView, Spotify, TopicsList, Objectives, Assignments, ClassNotes, DiagramGallery, GlobalSearch],
+  imports: [RouterOutlet, FaIconComponent, Clock, ActionsPanel, TodoWeek, Pomodoro, CalendarView, Spotify, TopicsList, Objectives, Assignments, ClassNotes, DiagramGallery, GlobalSearch, Dashboard],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
