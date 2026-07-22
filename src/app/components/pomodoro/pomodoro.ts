@@ -1,10 +1,9 @@
-import { DecimalPipe } from '@angular/common';
 import { Component, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-pomodoro',
-  imports: [DecimalPipe, FaIconComponent],
+  imports: [FaIconComponent],
   templateUrl: './pomodoro.html',
   styleUrl: './pomodoro.scss',
 })
@@ -13,12 +12,12 @@ export class Pomodoro implements OnDestroy {
   public seconds: number = 0;
   public isRunning: boolean = false;
   public isBreak: boolean = false;
-  private intervalId: any;
+  private intervalId: ReturnType<typeof setInterval> | null = null;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnDestroy(): void {
-    clearInterval(this.intervalId);
+    if (this.intervalId) clearInterval(this.intervalId);
   }
 
   public start() {
@@ -29,11 +28,11 @@ export class Pomodoro implements OnDestroy {
           this.minutes = this.isBreak ? 5 : 25;
           this.seconds = 0;
           this.isRunning = false;
-          clearInterval(this.intervalId);
+          if (this.intervalId) clearInterval(this.intervalId);
           if ('Notification' in window) {
             new Notification(this.isBreak ? 'Descanso terminado' : 'Tiempo de trabajo terminado');
           }
-          this.cdr.markForCheck();
+          this.cdr.detectChanges();
           return;
         }
         this.minutes--;
@@ -41,17 +40,17 @@ export class Pomodoro implements OnDestroy {
       } else {
         this.seconds--;
       }
-      this.cdr.markForCheck();
+      this.cdr.detectChanges();
     }, 1000);
   }
 
   public pause() {
-    clearInterval(this.intervalId);
+    if (this.intervalId) clearInterval(this.intervalId);
     this.isRunning = false;
   }
 
   public reset() {
-    clearInterval(this.intervalId);
+    if (this.intervalId) clearInterval(this.intervalId);
     this.minutes = 25;
     this.seconds = 0;
     this.isRunning = false;
